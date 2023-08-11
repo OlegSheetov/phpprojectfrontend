@@ -1,0 +1,9 @@
+ 
+.LoginComponent{
+    padding:50px;
+}
+.LoginComponent_Form{ 
+    max-width: 400px;
+    margin: auto;
+}
+
