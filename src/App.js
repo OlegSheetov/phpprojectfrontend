@@ -7,6 +7,7 @@ import AnquetteCard from "./components/AnquetteCard/AnquetteCard.js";
 import RegistrationComponent from "./components/RegistrationComponent/RegistrationComponent.js";
 import LoginComponent from "./components/LoginComponent/LoginComponent.js";
 import AnqueteeDetailed from "./components/AnquetteDetailed/AnquetteDetailed.js";
+import AccountSettings from "./components/AccountSettings/AccountSettings.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
 
@@ -28,7 +29,9 @@ class App extends Component {
                                 element={<RegistrationComponent />}
                             />
                             <Route path="/Login" element={<LoginComponent />} />
-                            <Route path="/AnquetteDetailed" element={<LoginComponent />} />
+                            <Route path="/AnquetteDetailed" element={<LoginComponent/>} />
+                            <Route path="/AccountSettings" element={<AccountSettings/>} />
+
 
                         </Routes>
                     </Container>
