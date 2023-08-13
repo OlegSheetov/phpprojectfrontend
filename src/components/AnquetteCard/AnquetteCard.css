@@ -5,8 +5,23 @@
 .AnquetteCard_UserName{ 
     border-bottom:2px solid lightgray;
 }
-.App_Header{ 
+.AnquetteCard_header{ 
     margin: 20px 0px;
     border-bottom: 2px solid lightgray;
+}
+.AnquetteCard_List{ 
+    display:flex;
+    flex-direction:row; 
+    flex-wrap:wrap;
+    justify-content:space-between;
+}
+.AnquetteCard_card{ 
+     width: 20rem;
+     margin:10px 10px;
+}
+
+.link { 
+    text-decoration:none;
+    color:black;
 }
 

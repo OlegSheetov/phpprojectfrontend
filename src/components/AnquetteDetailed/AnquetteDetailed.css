@@ -1,5 +1,9 @@
  
 .AnquetteDetailed{
-    /* Place scss code here */
+    padding: 50px;
 }
-
+.Link { 
+    text-decoration:none;
+    color:black; 
+    font-size: 20px;
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState} from "react";
 import useRef from "react";
 import "./RegistrationComponent.css";
 import Stack from "react-bootstrap/Stack";
@@ -9,10 +9,13 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
 export default function RegistrationComponent() {
+    let [email , setEmail] = useState('');
+    let [password, setPassword] = useState('');
+    let [description, setDescription] = useState('');
+
+
     return (
         <Container className="RegistrationComponent">
-            <Row>
-                <Col>
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Control
@@ -32,6 +35,17 @@ export default function RegistrationComponent() {
                                 placeholder="Password again"
                             />
                         </Form.Group>
+                    </Form>
+                    <Form>
+                        <Form.Group className="mb-3">
+                            <Form.Control
+                                as='textarea'
+                                maxlength='255'
+                                placeholder="Description"
+                                className="RegistrationComponent_Description"
+                            />
+                            <Form.Label>*225 Symbols maximum</Form.Label>
+                        </Form.Group>
                         <Form.Check
                             type="checkbox"
                             label="Remember me"
@@ -41,19 +55,6 @@ export default function RegistrationComponent() {
                             Submit
                         </Button>
                     </Form>
-                </Col>
-                <Col>
-                    <Form>
-                        <Form.Group className="mb-3">
-                            <Form.Control
-                                as="textarea"
-                                placeholder="Description"
-                                className="RegistrationComponent_Description"
-                            />
-                        </Form.Group>
-                    </Form>
-                </Col>
-            </Row>
         </Container>
     );
 }
