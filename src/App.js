@@ -14,11 +14,10 @@ import { Container } from "react-bootstrap";
 
 export default function App () {
     let [users , setUsers] = useState([]);
+    let [logged , setLogged] = useState(false);
 
     // function checkLogin(){ 
-    //  bla bla 
-    //  lorem ipsum 
-    //  hello world
+        // Проверка залогинен ли посетитель на сайте. 
     // }
     useEffect(()=>{
         fetch("http://localhost:80/backend/index.php", {method: "GET"})
