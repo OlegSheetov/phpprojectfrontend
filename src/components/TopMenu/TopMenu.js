@@ -12,12 +12,12 @@ export default function TopMenu(){
             <Navbar expand="lg" className="bg-body-tertiary">
                   <Container>
                       <Navbar.Brand><Link to='/' className='link'>Anquette</Link></Navbar.Brand>
-                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                        <Navbar.Collapse id="basic-navbar-nav">
+                        <Navbar.Toggle  />
+                        <Navbar.Collapse >
                           <Nav className="me-auto">
-                              <Nav.Link><Link to='/Registration' className='link'>Registration</Link></Nav.Link>
-                              <Nav.Link><Link to='/Login' className='link'>Login</Link></Nav.Link>
-                              <Nav.Link className='TopMenu_Account'><Link to='/AccountSettings' className='link'>Account Settings</Link></Nav.Link>
+                              <Nav.Link ><Link to='/Registration' className='link'>Registration</Link></Nav.Link>
+                              <Nav.Link ><Link to='/Login' className='link'>Login</Link></Nav.Link>
+                              <Nav.Link ><Link to='/AccountSettings' className='link'>Account Settings</Link></Nav.Link>
                           </Nav>
                         </Navbar.Collapse>
                   </Container>
