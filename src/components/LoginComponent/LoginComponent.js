@@ -1,10 +1,11 @@
-import React , {useState , useRef} from 'react';
+import React , {useState , useRef , useEffect} from 'react';
 import './LoginComponent.css'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
-
+import Cookie from 'js-cookie';
+import {useNavigate} from 'react-router-dom';
 
 
 export default function LoginComponent(){ 
@@ -21,26 +22,52 @@ export default function LoginComponent(){
     const NameRef = useRef();
     const PasswordRef = useRef();
 
+    const Navigate = useNavigate();
+
     function loginHandler(e){ 
         LoginFormValidation();
         if(FormValid == true) { 
            let payload = new FormData(); 
             payload.append('__method' , 'Login' )
-            payload.append('login' , login);
             payload.append('name' , name);
+            payload.append('login' , login);
             payload.append('password', password);
-
-            fetch("localhost:80/backend/index.php", {method: "POST" , body:payload})
+            fetch("http://localhost:80/backend/index.php", {method: "POST" , body:payload})
               .then(response => response.text())
-              .then(result => console.log(result))
+              .then(result => JSON.parse(result))
+              .then( json =>{
+                       if(json.user_exists == true){
+                           Cookie.set('name' , name , {secure: true , samesite: 'strict'});
+                           Cookie.set('login' , login , {secure: true , samesite: 'strict'});
+                           Cookie.set('password' , password , {secure: true , samesite: 'strict'});
+                           Navigate('/');
+                       }else{ 
+                           alert('User not found. Change something and try again.')
+                       }
+                       
+                   } 
+               )
               .catch(error => console.log('error', error));
         }
 
     }
 
 
+    useEffect (()=>{
+        if(document.cookie.includes('name'&&'login'&&'password')){
+            NameRef.current.value = Cookie.get('name');
+            LoginRef.current.value = Cookie.get('login');
+            PasswordRef.current.value = Cookie.get('password');
+            setName(Cookie.get('name'));
+            setLogin(Cookie.get('login'));
+            setPassword(Cookie.get('password'));
+        }
+    } , [])
+
+
     function LoginFormValidation(){ 
-        if(!LoginRef.current.value == true && !PasswordRef.current.value == true && !NameRef.current.value == true) { 
+        if(!LoginRef.current.value == true && !PasswordRef.current.value == true
+            && !NameRef.current.value == true) { 
             setFormValid(false);
             setLoginValid(!LoginRef.current.value)
             setPasswordValid(!PasswordRef.current.value)
@@ -59,9 +86,10 @@ export default function LoginComponent(){
                                 ref={NameRef}
                                 isInvalid={NameValid}
                                 onChange={()=>{ 
-                                    setName(NameRef.current.value) 
-                                    setNameValid(!NameRef.current.value)
-                                    LoginRef.current.value = `@${NameRef.current.value}Login`
+                                    setName(NameRef.current.value);
+                                    setNameValid(!NameRef.current.value);
+                                    LoginRef.current.value = `@${NameRef.current.value}Login`;
+                                    setLogin(LoginRef.current.value);
                             }}/>
                             <Form.Control className='mb-3' type='email' placeholder='Login' 
                                 ref={LoginRef}

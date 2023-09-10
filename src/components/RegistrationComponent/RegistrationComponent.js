@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {useNavigate} from 'react-router-dom';
+import Cookie from 'js-cookie';
 
 
 export default function RegistrationComponent() {
@@ -16,7 +17,6 @@ export default function RegistrationComponent() {
     let [password, setPassword] = useState('');
     let [passwordAgain, setPasswordAgain] = useState('');
     let [description, setDescription] = useState('');
-    let [RememberMe, setRememberMe] = useState('');
 
     let [nameValid , setNameValid] = useState(false);
     let [loginValid , setLoginValid] = useState(false);
@@ -36,25 +36,31 @@ export default function RegistrationComponent() {
     function formHandler() { 
         formValidation();
         if(formValid == true) { 
+            saveCookie();
            let payload = new FormData(); 
             payload.append('__method' , 'InsertNewUser' )
             payload.append('name' , name);
             payload.append('login' , login);
             payload.append('password', password);
             payload.append('description', description);
-            fetch( "http://localhost:80/backend/index.php", { method: "POST" , body:payload }) .then((response)=>{response.text()}).then(result =>console.log(result))
+            fetch( "http://localhost:80/backend/index.php", 
+                { method: "POST" , body:payload })
+                .then((response)=>{response.text()})
+                .then(result =>console.log(result))
                 .catch(error => console.log('error', error)); 
             Navigate('/Login');
         }
     }
 
     /*
-     *  formValidation - функция которая проверяет значения в форме регистрации и подкрашивает красным те поля которые пользователь забыл ввести. 
+     *  formValidation - функция которая проверяет значения в форме регистрации
+     *  и подкрашивает красным те поля которые пользователь забыл ввести. 
      *  Назначет в стейт formValid - true  если все поля заполнены и false в противоположном случае.
      */
      function formValidation(){ 
-         if ( !nameRef.current.value == true || !loginRef.current.value == true || !passwordRef.current.value == true || !passwordAgainRef.current.value == true || 
-             !descriptionRef.current.value == true ) {
+         if ( !nameRef.current.value == true || !loginRef.current.value == true 
+             || !passwordRef.current.value == true || !passwordAgainRef.current.value == true 
+             || !descriptionRef.current.value == true ) {
              setFormValid(false)
              setNameValid(!nameRef.current.value)
              setLoginValid(!loginRef.current.value)
@@ -74,6 +80,7 @@ export default function RegistrationComponent() {
 
     function AudoMakeLogin(e) { 
         loginRef.current.value = `@${e.target.value}Login`;
+        setLogin(loginRef.current.value);
     }
 
     function checkPassword(e) { 
@@ -87,6 +94,11 @@ export default function RegistrationComponent() {
         }
     }
 
+    function saveCookie(){
+        Cookie.set('name' , name , {secure: true, sameSite: 'strict'})
+        Cookie.set('login' , login , {secure: true, sameSite: 'strict'})
+        Cookie.set('password' , password , {secure: true, sameSite: 'strict'})
+    }
 
     return (
         <Container className="RegistrationComponent">
@@ -153,7 +165,7 @@ export default function RegistrationComponent() {
                                 isInvalid={descriptionValid}
                                 required
                             />
-                            <Form.Label>*225 Symbols maximum</Form.Label>
+                            <Form.Label className='text-muted'>*225 Symbols maximum</Form.Label>
                         </Form.Group>
                         <Button variant="primary" type="button" onClick={formHandler}> Submit </Button>
                     </Form>
