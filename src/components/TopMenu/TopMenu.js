@@ -10,13 +10,9 @@ import Cookie from 'js-cookie';
 
 export default function TopMenu(){ 
     let [userName , setUserName] = useState('');
-    let [Registration , setRegistration] = useState('Registration');
-    let [Login , setLogin] = useState('Login');
     useEffect(()=>{
         if(document.cookie.includes('name')){
             setUserName(Cookie.get('name'));
-            setRegistration('');
-            setLogin('');
         }
     } , [])
 
@@ -27,16 +23,22 @@ export default function TopMenu(){
                  <Nav.Link >
                      <Link to='/AccountSettings' className='link NameLink'>{userName}</Link>
                  </Nav.Link>
+                 <Nav.Link >
+                     <Link to='/WhatIsAnquette' className='link'>Что такое Anquette?</Link>
+                 </Nav.Link>
              </Nav>
             )
-        } else{ 
+        }else{ 
             return(
                 <Nav>
                       <Nav.Link >
-                          <Link to='/Registration' className='link'>Registration</Link>
+                          <Link to='/Registration' className='link'>Регистрация</Link>
                      </Nav.Link>
                      <Nav.Link >
-                         <Link to='/Login' className='link'>Login</Link>
+                         <Link to='/Login' className='link'>Вход</Link>
+                     </Nav.Link>
+                     <Nav.Link >
+                         <Link to='/WhatIsAnquette' className='link'>Что такое Anquette?</Link>
                      </Nav.Link>
                 </Nav>
             )
@@ -45,7 +47,7 @@ export default function TopMenu(){
 
     return(
         <div className='TopMenu'>
-            <Navbar expand="lg" className="bg-body-tertiary">
+            <Navbar expand="lg" className="bg-body-tertiary ">
                   <Container>
                       <Navbar.Brand><Link to='/' className='link'>Anquette</Link></Navbar.Brand>
                         <Navbar.Toggle  />
