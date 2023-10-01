@@ -1,6 +1,5 @@
 import React , { useState , useEffect } from 'react';
 import './TopMenu.css'
-import { Link } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -20,25 +19,22 @@ export default function TopMenu(){
         if(document.cookie.includes('name')){
             return (
              <Nav>
-                 <Nav.Link >
-                     <Link to='/AccountSettings' className='link NameLink'>{userName}</Link>
-                 </Nav.Link>
-                 <Nav.Link >
-                     <Link to='/WhatIsAnquette' className='link'>Что такое Anquette?</Link>
+                 <Nav.Link
+                     href='/AccountSettings'
+                     className='link NameLink'
+                 >
+                         {userName}
                  </Nav.Link>
              </Nav>
             )
         }else{ 
             return(
                 <Nav>
-                      <Nav.Link >
-                          <Link to='/Registration' className='link'>Регистрация</Link>
+                    <Nav.Link href='/Registration'>
+                        Регистрация
                      </Nav.Link>
-                     <Nav.Link >
-                         <Link to='/Login' className='link'>Вход</Link>
-                     </Nav.Link>
-                     <Nav.Link >
-                         <Link to='/WhatIsAnquette' className='link'>Что такое Anquette?</Link>
+                     <Nav.Link href='/Login'>
+                         Вход
                      </Nav.Link>
                 </Nav>
             )
@@ -49,10 +45,13 @@ export default function TopMenu(){
         <div className='TopMenu'>
             <Navbar expand="lg" className="bg-body-tertiary ">
                   <Container>
-                      <Navbar.Brand><Link to='/' className='link'>Anquette</Link></Navbar.Brand>
+                      <Navbar.Brand href='/'>Anquette</Navbar.Brand>
                         <Navbar.Toggle  />
                         <Navbar.Collapse >
                             {links()}
+                                <Nav.Link href='/WhatIsAnquette' >
+                                    Что такое Анкета ? 
+                                 </Nav.Link>
                         </Navbar.Collapse>
                   </Container>
                 </Navbar>
