@@ -43,7 +43,7 @@ export default function TopMenu(){
 
     return(
         <div className='TopMenu'>
-            <Navbar expand="lg" className="bg-body-tertiary ">
+            <Navbar expand="lg" className="bg-body-tertiary">
                   <Container>
                       <Navbar.Brand href='/'>Anquette</Navbar.Brand>
                         <Navbar.Toggle  />

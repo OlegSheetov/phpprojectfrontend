@@ -4,24 +4,25 @@ import { Form, Button , InputGroup , Card} from "react-bootstrap";
 import Cookie from 'js-cookie';
 
 
-function CommentsComponent(props) {
+export default function CommentsComponent(props) {
     let [comments, setComments] = useState([]);
     const CommentRef = useRef();
+    const SendRef = useRef();
 
 
-    function fetchComments() {
-        let payload = new FormData(); 
-        let result = [];
-        payload.append('__method', 'GetComments');
-        payload.append('AnquetteID' , props.AnquetteID);
+       function fetchComments() {
+           let payload = new FormData(); 
+           let result = [];
+           payload.append('__method', 'GetAllComments');
+           payload.append('AnquetteID' , props.AnquetteID);
 
-        fetch('http://localhost:80/backend/index.php', {method: 'POST' , body: payload})
-            .then(response => response.text())
-            .then(result => JSON.parse(result))
-            .then((json)=>{
-                setComments(json);
-            })
-    }
+           fetch('http://localhost:80/backend/index.php', {method: 'POST' , body: payload})
+               .then(response => response.text())
+              .then(result => JSON.parse(result))
+              .then((json)=>{
+                  setComments(json);
+              })
+       }
 
     function sendNewComment(){ 
         let payload = new FormData();
@@ -29,8 +30,6 @@ function CommentsComponent(props) {
         payload.append('AnquetteID', props.AnquetteID);
         payload.append('AuthorName', Cookie.get('name'));
         payload.append('CommentBody', CommentRef.current.value);
-
-
         fetch(
             'http://localhost:80/backend/index.php',
             {method: 'POST', body:payload}
@@ -42,30 +41,55 @@ function CommentsComponent(props) {
             fetchComments();
     }
     // Не доделано . Не знаю как взять id коммента
-    function DeleteComment(){
+    function DeleteComment(CommentID){
         if(confirm('Вы уверены ?')){
             alert('Deleted');
             let payload = new FormData();
             payload.append('__method', 'DeleteComment');
             payload.append('AnquetteID' , props.AnquetteID);
+            payload.append('CommentID', CommentID );
+            payload.append('AuthorLogin', Cookie.get('login'));
             payload.append('AuthorName' , Cookie.get('name'));
-            payload.append('CommentID', item.id );
-            console.log(item.id);
+            payload.append('AuthorPassword' , Cookie.get('password'));
 
+            fetch(
+                'http://localhost:80/backend/index.php',
+                {
+                    method: 'POST',
+                    body:payload
+                }
+            )
+               .then(response => response.text())
+               .then(result => console.log(result))
+               .catch((error)=> console.error(error))
         }
     }
 
-    function ShowDeleteButton(AuthorName){ 
+    function ShowDeleteButton(AuthorName, CommentID){
         if(Cookie.get('name') === AuthorName){
-            return(
-                <Button variant='danger'onClick={DeleteComment}>Delete</Button>
+            return (
+                <Button 
+                variant='danger'
+                value={CommentID}
+                onClick={()=>{DeleteComment(CommentID)}}>Delete</Button>
             )
+        }
+
+    }
+
+    function DisableCommentInputIfNotUserRegistered(){
+        if(Cookie.get('name')){
+            CommentRef.current.disabled = false;
+            SendRef.current.disabled = false;
+        }else { 
+            CommentRef.current.disabled = true;
+            SendRef.current.disabled = true;
         }
     }
 
     useEffect(() => {
-        console.log('Component mounted')
-         fetchComments();
+        fetchComments();
+        DisableCommentInputIfNotUserRegistered();
     }, []);
 
     return (
@@ -78,17 +102,19 @@ function CommentsComponent(props) {
                                 type="textarea"
                                 placeholder="Оставьте свой комметарий."
                                 ref={CommentRef}
+                                disabled={true}
                             />
                             <Button
                                 variant="success"
                                 onClick={sendNewComment}
+                                ref={SendRef}
                             >
                                 Отправить
                             </Button>
                         </InputGroup>
                     </Form>
                 {comments.map((item) => (
-                    <Card className='mt-2'  key={item.id}>
+                    <Card className='mt-2'  key={item.CommentID}>
                             <Card.Body>
                                 <Card.Title className="AnquetteCard_UserName">
                                     {item.AuthorName}
@@ -97,8 +123,8 @@ function CommentsComponent(props) {
                                 <Card.Text className='text-muted'>
                                     {item.timestamp}
                                 </Card.Text>
-                                {ShowDeleteButton(item.AuthorName)}
                             </Card.Body>
+                            {ShowDeleteButton(item.AuthorName, item.CommentID)}
                     </Card>
                 ))}
             </div>
@@ -107,4 +133,3 @@ function CommentsComponent(props) {
 }
 
 
-export default memo(CommentsComponent);

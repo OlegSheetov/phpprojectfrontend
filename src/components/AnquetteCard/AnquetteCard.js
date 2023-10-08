@@ -12,7 +12,9 @@ export default function AnquetteCard(props){
                      <Link to={`/${item.id}`} className='link' key={item.id}>
                  <Card className='AnquetteCard_card'>
                       <Card.Body>
-                            <Card.Title className='AnquetteCard_UserName'>{item.name}</Card.Title>
+                          <Card.Title 
+                              className='AnquetteCard_UserName'
+                          >{item.name}</Card.Title>
                             <Card.Text>{item.description}</Card.Text>
                       </Card.Body>
                       </Card>

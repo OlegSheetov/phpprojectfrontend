@@ -26,20 +26,36 @@ export default function LoginComponent(){
 
     function loginHandler(e){ 
         LoginFormValidation();
-        if(FormValid == true) { 
+        //if(FormValid == true) { 
+        if(LoginFormValidation()){
            let payload = new FormData(); 
             payload.append('__method' , 'Login' )
             payload.append('name' , name);
             payload.append('login' , login);
             payload.append('password', password);
-            fetch("http://localhost:80/backend/index.php", {method: "POST" , body:payload})
+            fetch(
+                "http://localhost:80/backend/index.php",
+                {method: "POST" , body:payload}
+            )
               .then(response => response.text())
-              .then(result => JSON.parse(result))
+              .then((result) => JSON.parse(result))
               .then( json =>{
                        if(json.user_exists == true){
-                           Cookie.set('name' , name , {secure: true , samesite: 'strict'});
-                           Cookie.set('login' , login , {secure: true , samesite: 'strict'});
-                           Cookie.set('password' , password , {secure: true , samesite: 'strict'});
+                           Cookie.set(
+                              'name' ,
+                               name ,
+                               {secure: true , samesite: 'strict'}
+                           );
+                           Cookie.set(
+                              'login' ,
+                               login ,
+                               {secure: true , samesite: 'strict'}
+                           );
+                           Cookie.set(
+                              'password' ,
+                               password ,
+                               {secure: true , samesite: 'strict'}
+                           );
                            Navigate('/');
                        }else{ 
                            alert('User not found. Change something and try again.')
@@ -72,8 +88,10 @@ export default function LoginComponent(){
             setLoginValid(!LoginRef.current.value)
             setPasswordValid(!PasswordRef.current.value)
             setNameValid(!NameRef.current.value)
+            return false 
         }else{ 
             setFormValid(true);
+            return true
         }
     }
     return(

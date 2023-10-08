@@ -31,8 +31,7 @@ export default function RegistrationComponent() {
     const descriptionRef = useRef();
 
     function formHandler() {
-        formValidation();
-        if (formValid == true) {
+        if (formValidation()) {
             saveCookie();
             let payload = new FormData();
             payload.append("__method", "InsertNewUser");
@@ -47,8 +46,7 @@ export default function RegistrationComponent() {
                 .then((response) => {
                     response.text();
                 })
-                .then((result) => console.log(result))
-                .catch((error) => console.log("error", error));
+                .catch((error) => console.error("error", error));
             Navigate("/Login");
         }
     }
@@ -66,19 +64,21 @@ export default function RegistrationComponent() {
             !passwordAgainRef.current.value == true ||
             !descriptionRef.current.value == true
         ) {
-            setFormValid(false);
+            //setFormValid(false);
             setNameValid(!nameRef.current.value);
             setLoginValid(!loginRef.current.value);
             setPasswordValid(!passwordRef.current.value);
             setPasswordAgainValid(!passwordAgainRef.current.value);
             setDescriptionValid(!descriptionRef.current.value);
+            return false
         } else {
-            setFormValid(true);
+            //setFormValid(true);
             setNameValid(!nameRef.current.value);
             setLoginValid(!loginRef.current.value);
             setPasswordValid(!passwordRef.current.value);
             setPasswordAgainValid(!passwordAgainRef.current.value);
             setDescriptionValid(!descriptionRef.current.value);
+            return true 
         }
     }
 

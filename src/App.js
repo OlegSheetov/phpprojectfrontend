@@ -1,4 +1,4 @@
-import React , {useState , useEffect}from "react";
+import React , {useState , useEffect, useMemo}from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
@@ -33,12 +33,30 @@ export default function App () {
                     <TopMenu />
                     <Container>
                         <Routes>
-                            <Route path="/" element={<AnquetteCard users={users} />} />
-                            <Route path="/Registration" element={<RegistrationComponent />} />
-                            <Route path="/Login" element={<LoginComponent />} />
-                            <Route path="/:key" element={<AnquetteDetailed getUser={getUser} />} />
-                            <Route path="/AccountSettings" element={<AccountSettings/>} />
-                            <Route path="/WhatIsAnquette" element={<WhatIsAnquette/>} />
+                            <Route 
+                                path="/"
+                                element={<AnquetteCard users={users} />}
+                            />
+                            <Route 
+                                path="/Registration"
+                                element={<RegistrationComponent/>}
+                            />
+                            <Route
+                                path="/Login"
+                                element={<LoginComponent />}
+                            />
+                            <Route
+                                path="/:key"
+                                element={<AnquetteDetailed getUser={getUser}/>}
+                            />
+                            <Route
+                                path="/AccountSettings"
+                                element={<AccountSettings/>} 
+                            />
+                            <Route 
+                                path="/WhatIsAnquette"
+                                element={<WhatIsAnquette/>}
+                            />
                         </Routes>
                     </Container>
                 </div>
