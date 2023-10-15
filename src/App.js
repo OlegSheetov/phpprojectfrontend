@@ -1,4 +1,4 @@
-import React , {useState , useEffect, useMemo}from "react";
+import React , {useState , useEffect, createContext }from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
@@ -12,9 +12,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
 import WhatIsAnquette from './components/WhatIsAnquette/WhatIsAnquette.js';
 
+
+
 export default function App () {
     let [users , setUsers] = useState([]);
     let [logged , setLogged] = useState(false);
+    const UsersContext = createContext();
 
     useEffect(()=>{
         fetch("http://localhost:80/backend/index.php", {method: "GET"})
@@ -32,32 +35,36 @@ export default function App () {
                 <div className="App">
                     <TopMenu />
                     <Container>
-                        <Routes>
-                            <Route 
-                                path="/"
-                                element={<AnquetteCard users={users} />}
-                            />
-                            <Route 
-                                path="/Registration"
-                                element={<RegistrationComponent/>}
-                            />
-                            <Route
-                                path="/Login"
-                                element={<LoginComponent />}
-                            />
-                            <Route
-                                path="/:key"
-                                element={<AnquetteDetailed getUser={getUser}/>}
-                            />
-                            <Route
-                                path="/AccountSettings"
-                                element={<AccountSettings/>} 
-                            />
-                            <Route 
-                                path="/WhatIsAnquette"
-                                element={<WhatIsAnquette/>}
-                            />
-                        </Routes>
+                            <Routes>
+                                <Route 
+                                    path="/"
+                                    element={<AnquetteCard users={users} />}
+                                />
+                                <Route 
+                                    path="/Registration"
+                                    element={<RegistrationComponent/>}
+                                />
+                                <Route
+                                    path="/Login"
+                                    element={<LoginComponent />}
+                                />
+                                <Route
+                                    path="/:key"
+                                element={
+                                    <UsersContext.Provider value={users}>
+                                        <AnquetteDetailed/>
+                                    </UsersContext.Provider>
+                                }
+                                />
+                                <Route
+                                    path="/AccountSettings"
+                                    element={<AccountSettings/>} 
+                                />
+                                <Route 
+                                    path="/WhatIsAnquette"
+                                    element={<WhatIsAnquette/>}
+                                />
+                            </Routes>
                     </Container>
                 </div>
             </BrowserRouter>

@@ -1,14 +1,19 @@
 import React, {useEffect, useState, useRef, memo} from "react";
-import "./CommentsComponent.css";
+import './CommentsComponent.css';
 import { Form, Button , InputGroup , Card} from "react-bootstrap";
 import Cookie from 'js-cookie';
 
-
 export default function CommentsComponent(props) {
+
+    // Ужастный спагетти код. 
+    // Надеюсь что его никто не увидит.
+
     let [comments, setComments] = useState([]);
+    let [CommentIDForChange, setCommentIDForChange] = useState('');
     const CommentRef = useRef();
     const SendRef = useRef();
-
+    const ChangeAndSendRef = useRef();
+    const ChangeCommentButtonRef = useRef();
 
        function fetchComments() {
            let payload = new FormData(); 
@@ -16,8 +21,11 @@ export default function CommentsComponent(props) {
            payload.append('__method', 'GetAllComments');
            payload.append('AnquetteID' , props.AnquetteID);
 
-           fetch('http://localhost:80/backend/index.php', {method: 'POST' , body: payload})
-               .then(response => response.text())
+           fetch(
+               'http://localhost:80/backend/index.php',
+               {method: 'POST' , body: payload}
+           )
+              .then(response => response.text())
               .then(result => JSON.parse(result))
               .then((json)=>{
                   setComments(json);
@@ -30,6 +38,7 @@ export default function CommentsComponent(props) {
         payload.append('AnquetteID', props.AnquetteID);
         payload.append('AuthorName', Cookie.get('name'));
         payload.append('CommentBody', CommentRef.current.value);
+
         fetch(
             'http://localhost:80/backend/index.php',
             {method: 'POST', body:payload}
@@ -40,7 +49,7 @@ export default function CommentsComponent(props) {
             CommentRef.current.value = '';
             fetchComments();
     }
-    // Не доделано . Не знаю как взять id коммента
+
     function DeleteComment(CommentID){
         if(confirm('Вы уверены ?')){
             alert('Deleted');
@@ -62,19 +71,94 @@ export default function CommentsComponent(props) {
                .then(response => response.text())
                .then(result => console.log(result))
                .catch((error)=> console.error(error))
+                fetchComments();
         }
+    }
+
+    function SetCurrentCommentToInput(
+        CurrentCommentBody,
+        CommentID
+    ){ 
+        setCommentIDForChange(CommentID);
+        ChangeCommentButtonRef.current.disabled = true;
+        CommentRef.current.value = CurrentCommentBody;
+        ChangeAndSendRef.current.className = "btn btn-warning"; 
+        SendRef.current.className = "d-none";
+    }
+
+
+    // Change or Update comment 
+    function ChangeComment(
+    ){ 
+
+        if(confirm('Вы уверены ?')){
+            alert('Comment changed !');
+            let  payload = new FormData();
+            payload.append('__method', 'UpdateComment');
+            payload.append('AnquetteID', props.AnquetteID);
+            payload.append('CommentID', CommentIDForChange);
+            payload.append('AuthorName', Cookie.get('name'));
+            payload.append('AuthorLogin', Cookie.get('login'));
+            payload.append('AuthorPassword', Cookie.get('password'));
+            payload.append('CommentBody' , CommentRef.current.value );
+
+            fetch(
+                'http://localhost:80/backend/index.php',
+                {
+                    method: 'POST',
+                    body:payload
+                }
+            )
+               .then(response => response.text())
+               .then(result => console.log(result))
+               .catch((error)=> console.error(error));
+
+            ChangeAndSendRef.current.className = "d-none"; 
+            SendRef.current.className = "btn btn-success";
+            ChangeCommentButtonRef.current.disabled = false;
+            CommentRef.current.value = '';
+            fetchComments();
+        }
+
+
     }
 
     function ShowDeleteButton(AuthorName, CommentID){
         if(Cookie.get('name') === AuthorName){
             return (
                 <Button 
-                variant='danger'
-                value={CommentID}
-                onClick={()=>{DeleteComment(CommentID)}}>Delete</Button>
+                    variant='danger'
+                    value={CommentID}
+                    onClick={()=>{DeleteComment(CommentID)}}
+                >Удалить</Button>
             )
         }
+    }
 
+    function ShowChangeCommentButton(
+        AuthorName,
+        CurrentCommentBody,
+        CommentID
+    ){
+        if(Cookie.get('name') === AuthorName){
+            return (
+                <Button 
+                    variant='success'
+                    value={
+                        CurrentCommentBody,
+                        CommentID
+                    }
+                    ref={ChangeCommentButtonRef}
+                    onClick={(e)=>{
+                        SetCurrentCommentToInput(
+                            CurrentCommentBody,
+                            CommentID
+                        );
+                    }
+                }
+                >Изменить</Button>
+            )
+        }
     }
 
     function DisableCommentInputIfNotUserRegistered(){
@@ -111,6 +195,14 @@ export default function CommentsComponent(props) {
                             >
                                 Отправить
                             </Button>
+                            <Button
+                                variant="warning"
+                                onClick={ChangeComment}
+                                ref={ChangeAndSendRef}
+                                className='d-none'
+                            >
+                                Изменить и отправить
+                            </Button>
                         </InputGroup>
                     </Form>
                 {comments.map((item) => (
@@ -123,8 +215,15 @@ export default function CommentsComponent(props) {
                                 <Card.Text className='text-muted'>
                                     {item.timestamp}
                                 </Card.Text>
+                                <InputGroup>
+                                    {ShowDeleteButton(item.AuthorName, item.CommentID)}
+                                    {ShowChangeCommentButton(
+                                        item.AuthorName,
+                                        item.commentBody,
+                                        item.CommentID
+                                    )}
+                                </InputGroup>
                             </Card.Body>
-                            {ShowDeleteButton(item.AuthorName, item.CommentID)}
                     </Card>
                 ))}
             </div>
