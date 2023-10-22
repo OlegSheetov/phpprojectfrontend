@@ -1,26 +1,27 @@
- 
-.AnquetteCard{
+[warn] --jsx-bracket-same-line is deprecated.
+[warn] Ignored unknown option --loglevel=error. Did you mean --log-level?
+[warn] Ignored unknown option --stdin.
+.AnquetteCard {
 }
-.AnquetteCard_UserName{ 
-    border-bottom:2px solid lightgray;
+.AnquetteCard_UserName {
+    border-bottom: 2px solid lightgray;
 }
-.AnquetteCard_header{ 
+.AnquetteCard_header {
     margin: 20px 0px;
     border-bottom: 2px solid lightgray;
 }
-.AnquetteCard_List{ 
-    display:flex;
-    flex-direction:row; 
-    flex-wrap:wrap;
-    justify-content:space-evenly;
+.AnquetteCard_List {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
 }
-.AnquetteCard_card{ 
-     width: 20rem;
-     margin:10px 10px;
-}
-
-.link { 
-    text-decoration:none;
-    color:black;
+.AnquetteCard_card {
+    width: 20rem;
+    margin: 10px 10px;
 }
 
+.link {
+    text-decoration: none;
+    color: black;
+}

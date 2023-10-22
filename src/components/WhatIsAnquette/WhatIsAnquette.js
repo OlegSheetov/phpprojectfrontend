@@ -9,7 +9,7 @@ export default function WhatIsAnquette(){
         <div className='WhatIsAnquette'>
             <Container className='mt-5'>
                 <h1>Что такое Anquette?</h1>
-                <p>Anquette -  это сайт на котором вы можете поделиться содержанием своей работы , чтобы помочь будущим поколениям выбрать то что им нравится.</p>
+                <p>Anquette -  это сайт на котором вы можете поделиться содержанием своей работы , чтобы помочь другим людям выбрать то что им нравится.</p>
             </Container>
         </div>
         </div>

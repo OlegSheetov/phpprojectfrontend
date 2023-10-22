@@ -1,5 +1,6 @@
 import React , { useState , useEffect } from 'react';
-import './TopMenu.css'
+import './TopMenu.css';
+import logo from './githublogo.png';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -53,6 +54,15 @@ export default function TopMenu(){
                                     Что такое Анкета ? 
                                  </Nav.Link>
                         </Navbar.Collapse>
+                        <Nav.Link 
+                            href='https://github.com/OlegSheetov' 
+                            target='_blank'
+                        >
+                            <img 
+                                src = {logo}
+                                alt = "GitHub" 
+                            />
+                         </Nav.Link>
                   </Container>
                 </Navbar>
         </div>

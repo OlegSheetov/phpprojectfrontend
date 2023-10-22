@@ -1,4 +1,4 @@
-import React , {useState , useEffect, createContext }from "react";
+import React , {useState , useEffect, useRef }from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
@@ -17,12 +17,20 @@ import WhatIsAnquette from './components/WhatIsAnquette/WhatIsAnquette.js';
 export default function App () {
     let [users , setUsers] = useState([]);
     let [logged , setLogged] = useState(false);
-    const UsersContext = createContext();
+    let usersRef = useRef();
+
+
+    function fetchUsers() { 
+    }
 
     useEffect(()=>{
-        fetch("http://localhost:80/backend/index.php", {method: "GET"})
-           .then(response => response.text())
-           .then(result => JSON.parse(result)).then(json => setUsers(json))
+       fetch("http://localhost:80/backend/index.php", {method: "GET"})
+            .then(response => response.text())
+            .then(result => JSON.parse(result))
+            .then(json => {
+                usersRef.current = json;
+                setUsers(json);
+            })
            .catch(error => console.log('error', error));
     }, [])
 
@@ -35,11 +43,12 @@ export default function App () {
                 <div className="App">
                     <TopMenu />
                     <Container>
+
                             <Routes>
-                                <Route 
-                                    path="/"
-                                    element={<AnquetteCard users={users} />}
-                                />
+                               <Route 
+                                   path="/"
+                                   element={<AnquetteCard usersRef={usersRef.current}/>}
+                               />
                                 <Route 
                                     path="/Registration"
                                     element={<RegistrationComponent/>}
@@ -50,11 +59,7 @@ export default function App () {
                                 />
                                 <Route
                                     path="/:key"
-                                element={
-                                    <UsersContext.Provider value={users}>
-                                        <AnquetteDetailed/>
-                                    </UsersContext.Provider>
-                                }
+                                    element={<AnquetteDetailed users={usersRef.current}/> }
                                 />
                                 <Route
                                     path="/AccountSettings"

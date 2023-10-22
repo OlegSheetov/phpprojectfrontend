@@ -8,18 +8,14 @@ import UsersContext from '../../App.js';
 
 export default function AnquetteDetailed(props) {
     const { key } = useParams();
-    let users = useContext(UsersContext);
     let [user , setUser] = useState({})
 
-    // Ошибка в том что при перезагрузке страницы компонент теряет users и выдает ошибку 
-    // Решение - использовать React-context или Redux , но проще первое.
-
     function getUser(id){ 
-        return users.find((el) => el.id == id)
+        return props.users.find((el) => el.id == id)
     }
     useEffect(()=>{
-        setUser(getUser(key))
-    },[])
+        setUser(getUser(key));
+    },[key])
 
         return (
             <>
