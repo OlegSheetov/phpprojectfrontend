@@ -37,7 +37,7 @@ export default function AccountSettings() {
             payload.append("new_name", Name);
             payload.append("new_password", Password);
             payload.append("new_description", Description);
-            fetch("http://localhost:80/backend/index.php", {
+            fetch("http://localhost:80/.backend/index.php", {
                 method: "POST",
                 body: payload,
             })
@@ -67,7 +67,7 @@ export default function AccountSettings() {
             payload.append("name", Name);
             payload.append("login", Cookie.get("login"));
             payload.append("CheckPassword", Password);
-            fetch("http://localhost:80/backend/index.php", {
+            fetch("http://localhost:80/.backend/index.php", {
                 method: "POST",
                 body: payload,
             })
@@ -92,7 +92,7 @@ export default function AccountSettings() {
         //   payload.append('__method' , 'GetOneUser' )
         //   payload.append('name' , Cookie.get('name'));
         //   payload.append('login' , Cookie.get('login'));
-        //   fetch( "http://localhost:80/backend/index.php",
+        //   fetch( "http://localhost:80/.backend/index.php",
         //       { method: "POST" , body:payload })
         //       .then((response)=>{response.text()})
         //       .then(result =>console.log(result))

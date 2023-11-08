@@ -39,7 +39,7 @@ export default function RegistrationComponent() {
             payload.append("login", login);
             payload.append("password", password);
             payload.append("description", description);
-            fetch("http://localhost:80/backend/index.php", {
+            fetch("http://localhost:80/.backend/index.php", {
                 method: "POST",
                 body: payload,
             })

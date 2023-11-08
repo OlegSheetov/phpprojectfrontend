@@ -3,6 +3,10 @@ import './AnquetteCard.css'
 import {Card, Button, Stack} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 export default function AnquetteCard(props){ 
+
+
+
+
     return(
         <div className='AnquetteCard'>
              <h1 className='AnquetteCard_header'>Анкеты</h1>

@@ -16,22 +16,29 @@ import WhatIsAnquette from './components/WhatIsAnquette/WhatIsAnquette.js';
 
 export default function App () {
     let [users , setUsers] = useState([]);
-    let [logged , setLogged] = useState(false);
     let usersRef = useRef();
 
 
     function fetchUsers() { 
-    }
-
-    useEffect(()=>{
-       fetch("http://localhost:80/backend/index.php", {method: "GET"})
+       fetch("http://localhost:80/.backend/index.php", {method: "GET"})
             .then(response => response.text())
             .then(result => JSON.parse(result))
             .then(json => {
-                usersRef.current = json;
                 setUsers(json);
+                sessionStorage.Users = JSON.stringify(json)
             })
            .catch(error => console.log('error', error));
+    }
+
+    function SaveUsersToSessionStorage(){ 
+            if(sessionStorage.Users == '[]' || sessionStorage.Users != undefined){ 
+                setUsers(JSON.parse(sessionStorage.Users))
+            }
+    }
+
+    useEffect(()=>{
+        fetchUsers();
+        SaveUsersToSessionStorage();
     }, [])
 
 
@@ -47,7 +54,7 @@ export default function App () {
                             <Routes>
                                <Route 
                                    path="/"
-                                   element={<AnquetteCard usersRef={usersRef.current}/>}
+                                   element={<AnquetteCard usersRef={users}/>}
                                />
                                 <Route 
                                     path="/Registration"
@@ -59,7 +66,7 @@ export default function App () {
                                 />
                                 <Route
                                     path="/:key"
-                                    element={<AnquetteDetailed users={usersRef.current}/> }
+                                    element={<AnquetteDetailed users={users}/> }
                                 />
                                 <Route
                                     path="/AccountSettings"

@@ -34,7 +34,7 @@ export default function LoginComponent(){
             payload.append('login' , login);
             payload.append('password', password);
             fetch(
-                "http://localhost:80/backend/index.php",
+                "http://localhost:80/.backend/index.php",
                 {method: "POST" , body:payload}
             )
               .then(response => response.text())

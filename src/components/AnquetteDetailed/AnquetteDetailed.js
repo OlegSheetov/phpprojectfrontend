@@ -1,21 +1,34 @@
-import React , {useMemo, useState, useEffect, useContext} from "react";
+import React , { useState, useEffect} from "react";
 import "./AnquetteDetailed.css";
 import { useParams, Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import CommentsComponent from '../../components/CommentsComponent/CommentsComponent';
 import Cookie from 'js-cookie';
-import UsersContext from '../../App.js';
+import Button from 'react-bootstrap/Button';
 
 export default function AnquetteDetailed(props) {
     const { key } = useParams();
     let [user , setUser] = useState({})
 
+
+
     function getUser(id){ 
-        return props.users.find((el) => el.id == id)
+        //  Если в сессионном хранилище нет данных , то используй проп. 
+        //  Такой вот плат Б.
+        if (sessionStorage.Users == undefined){
+            let users = props.users;
+            return users.find((el) => el.id == id)
+        }else { 
+            let users = JSON.parse(sessionStorage.Users);
+            return users.find((el) => el.id == id)
+        }
+
     }
+
+
     useEffect(()=>{
         setUser(getUser(key));
-    },[key])
+    },[])
 
         return (
             <>
@@ -25,7 +38,9 @@ export default function AnquetteDetailed(props) {
                     </Link>
                     <h1>{user.name}</h1>
                     <p>{user.description}</p>
-                    <CommentsComponent AnquetteID={key}/>
+                    <CommentsComponent 
+                        AnquetteID={key} 
+                    />
             </Container>
         </>
     );

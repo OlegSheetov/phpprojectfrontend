@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, memo} from "react";
+import React, {useEffect, useState, useRef, useReducer } from "react";
 import './CommentsComponent.css';
 import { Form, Button , InputGroup , Card} from "react-bootstrap";
 import Cookie from 'js-cookie';
@@ -10,27 +10,29 @@ export default function CommentsComponent(props) {
 
     let [comments, setComments] = useState([]);
     let [CommentIDForChange, setCommentIDForChange] = useState('');
+    let[, Update] = useReducer(x=> x+1, 0);
     const CommentRef = useRef();
     const SendRef = useRef();
     const ChangeAndSendRef = useRef();
     const ChangeCommentButtonRef = useRef();
 
-       function fetchComments() {
-           let payload = new FormData(); 
-           let result = [];
-           payload.append('__method', 'GetAllComments');
-           payload.append('AnquetteID' , props.AnquetteID);
 
-           fetch(
-               'http://localhost:80/backend/index.php',
-               {method: 'POST' , body: payload}
-           )
-              .then(response => response.text())
-              .then(result => JSON.parse(result))
-              .then((json)=>{
-                  setComments(json);
-              })
-       }
+
+   function fetchComments() {
+       let payload = new FormData(); 
+       payload.append('__method', 'GetAllComments');
+       payload.append('AnquetteID' , props.AnquetteID);
+
+       fetch(
+           'http://localhost:80/.backend/index.php',
+           {method: 'POST' , body: payload}
+       )
+          .then(response => response.text())
+          .then(result => JSON.parse(result))
+          .then((json)=>{
+              setComments(json);
+          })
+   }
 
     function sendNewComment(){ 
         let payload = new FormData();
@@ -40,14 +42,14 @@ export default function CommentsComponent(props) {
         payload.append('CommentBody', CommentRef.current.value);
 
         fetch(
-            'http://localhost:80/backend/index.php',
+            'http://localhost:80/.backend/index.php',
             {method: 'POST', body:payload}
         )
            .then(response => response.text())
            .then(result => console.log(result))
-            .catch((error)=> console.error(error))
+           .catch((error)=> console.error(error))
             CommentRef.current.value = '';
-            fetchComments();
+            Update();
     }
 
     function DeleteComment(CommentID){
@@ -62,7 +64,7 @@ export default function CommentsComponent(props) {
             payload.append('AuthorPassword' , Cookie.get('password'));
 
             fetch(
-                'http://localhost:80/backend/index.php',
+                'http://localhost:80/.backend/index.php',
                 {
                     method: 'POST',
                     body:payload
@@ -71,7 +73,7 @@ export default function CommentsComponent(props) {
                .then(response => response.text())
                .then(result => console.log(result))
                .catch((error)=> console.error(error))
-                fetchComments();
+                Update();
         }
     }
 
@@ -88,9 +90,7 @@ export default function CommentsComponent(props) {
 
 
     // Change or Update comment 
-    function ChangeComment(
-    ){ 
-
+    function ChangeComment(){ 
         if(confirm('Вы уверены ?')){
             alert('Comment changed !');
             let  payload = new FormData();
@@ -103,24 +103,24 @@ export default function CommentsComponent(props) {
             payload.append('CommentBody' , CommentRef.current.value );
 
             fetch(
-                'http://localhost:80/backend/index.php',
+                'http://localhost:80/.backend/index.php',
                 {
                     method: 'POST',
                     body:payload
                 }
             )
                .then(response => response.text())
-               .then(result => console.log(result))
+                .then((result) => {
+                    console.log(result);
+                })
                .catch((error)=> console.error(error));
 
             ChangeAndSendRef.current.className = "d-none"; 
             SendRef.current.className = "btn btn-success";
             ChangeCommentButtonRef.current.disabled = false;
             CommentRef.current.value = '';
-            fetchComments();
+            Update();
         }
-
-
     }
 
     function ShowDeleteButton(AuthorName, CommentID){
@@ -174,7 +174,7 @@ export default function CommentsComponent(props) {
     useEffect(() => {
         fetchComments();
         DisableCommentInputIfNotUserRegistered();
-    }, []);
+    }, [Update]);
 
     return (
         <>
@@ -183,7 +183,7 @@ export default function CommentsComponent(props) {
                         <Form.Text>Комментарии:</Form.Text>
                         <InputGroup>
                             <Form.Control
-                                type="textarea"
+                                as="textarea"
                                 placeholder="Оставьте свой комметарий."
                                 ref={CommentRef}
                                 disabled={true}

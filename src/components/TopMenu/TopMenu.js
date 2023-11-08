@@ -6,6 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Cookie from 'js-cookie';
+import {Link} from 'react-router-dom';
 
 
 export default function TopMenu(){ 
@@ -20,23 +21,20 @@ export default function TopMenu(){
         if(document.cookie.includes('name')){
             return (
              <Nav>
-                 <Nav.Link
-                     href='/AccountSettings'
-                     className='link NameLink'
-                 >
+                     <Link className='link' to='/AccountSettings' >
                          {userName}
-                 </Nav.Link>
+                     </Link>
              </Nav>
             )
         }else{ 
             return(
                 <Nav>
-                    <Nav.Link href='/Registration'>
-                        Регистрация
-                     </Nav.Link>
-                     <Nav.Link href='/Login'>
-                         Вход
-                     </Nav.Link>
+                        <Link className='link' to='/Registration'>
+                            Регистрация
+                        </Link>
+                         <Link className='link' to='/Login'>
+                             Вход
+                         </Link>
                 </Nav>
             )
         }
@@ -50,9 +48,9 @@ export default function TopMenu(){
                         <Navbar.Toggle  />
                         <Navbar.Collapse >
                             {links()}
-                                <Nav.Link href='/WhatIsAnquette' >
-                                    Что такое Анкета ? 
-                                 </Nav.Link>
+                                    <Link  className='link' to='/WhatIsAnquette'>
+                                        Что такое Анкета ? 
+                                    </Link>
                         </Navbar.Collapse>
                         <Nav.Link 
                             href='https://github.com/OlegSheetov' 
