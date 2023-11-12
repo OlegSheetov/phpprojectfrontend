@@ -1,4 +1,4 @@
-import React , {useState , useEffect, useRef }from "react";
+import React , {useState , useEffect, useRef, useReducer }from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
@@ -17,6 +17,7 @@ import WhatIsAnquette from './components/WhatIsAnquette/WhatIsAnquette.js';
 export default function App () {
     let [users , setUsers] = useState([]);
     let usersRef = useRef();
+    const [RerenderValue , ReRender] = useReducer(  x=> x+1, 0);
 
 
     function fetchUsers() { 
@@ -39,7 +40,7 @@ export default function App () {
     useEffect(()=>{
         fetchUsers();
         SaveUsersToSessionStorage();
-    }, [])
+    }, [RerenderValue])
 
 
     function getUser(id){ 
@@ -48,13 +49,14 @@ export default function App () {
         return (
             <BrowserRouter>
                 <div className="App">
-                    <TopMenu />
-                    <Container>
-
+                    <TopMenu ReRenderValue={RerenderValue} />
+                    <input type="button" onClick={ReRender} value="Update" />
+                    {RerenderValue}
+                <Container>
                             <Routes>
                                <Route 
                                    path="/"
-                                   element={<AnquetteCard usersRef={users}/>}
+                                   element={<AnquetteCard users={users}/>}
                                />
                                 <Route 
                                     path="/Registration"
@@ -66,11 +68,11 @@ export default function App () {
                                 />
                                 <Route
                                     path="/:key"
-                                    element={<AnquetteDetailed users={users}/> }
+                                    element={<AnquetteDetailed users={users}/>}
                                 />
                                 <Route
                                     path="/AccountSettings"
-                                    element={<AccountSettings/>} 
+                                    element={<AccountSettings Update={ReRender}/>} 
                                 />
                                 <Route 
                                     path="/WhatIsAnquette"

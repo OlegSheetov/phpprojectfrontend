@@ -38,8 +38,8 @@ export default function LoginComponent(){
                 {method: "POST" , body:payload}
             )
               .then(response => response.text())
-              .then((result) => JSON.parse(result))
-              .then( json =>{
+                .then(result => JSON.parse(result) )
+              .then(json =>{
                        if(json.user_exists == true){
                            Cookie.set(
                               'name' ,
@@ -54,6 +54,16 @@ export default function LoginComponent(){
                            Cookie.set(
                               'password' ,
                                password ,
+                               {secure: true , samesite: 'strict'}
+                           );
+                           Cookie.set(
+                               'description', 
+                               json.UserData.description,
+                               {secure: true , samesite: 'strict'}
+                           );
+                           Cookie.set(
+                                'MBTITYPE',
+                               json.UserData.mbtitype, 
                                {secure: true , samesite: 'strict'}
                            );
                            Navigate('/');

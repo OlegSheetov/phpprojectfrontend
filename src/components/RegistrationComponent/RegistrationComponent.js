@@ -16,6 +16,7 @@ export default function RegistrationComponent() {
     let [password, setPassword] = useState("");
     let [passwordAgain, setPasswordAgain] = useState("");
     let [description, setDescription] = useState("");
+    let [MBTITYPE, setMBTITYPE] = useState("");
 
     let [nameValid, setNameValid] = useState(false);
     let [loginValid, setLoginValid] = useState(false);
@@ -23,12 +24,14 @@ export default function RegistrationComponent() {
     let [passwordAgainValid, setPasswordAgainValid] = useState(false);
     let [descriptionValid, setDescriptionValid] = useState(false);
     let [formValid, setFormValid] = useState(false);
+    let [MBTIValid, setMBTIValid] = useState(false);
 
     const nameRef = useRef();
     const loginRef = useRef();
     const passwordRef = useRef();
     const passwordAgainRef = useRef();
     const descriptionRef = useRef();
+    const MBTIRef = useRef();
 
     function formHandler() {
         if (formValidation()) {
@@ -39,6 +42,7 @@ export default function RegistrationComponent() {
             payload.append("login", login);
             payload.append("password", password);
             payload.append("description", description);
+            payload.append("MBTITYPE", MBTITYPE);
             fetch("http://localhost:80/.backend/index.php", {
                 method: "POST",
                 body: payload,
@@ -62,7 +66,8 @@ export default function RegistrationComponent() {
             !loginRef.current.value == true ||
             !passwordRef.current.value == true ||
             !passwordAgainRef.current.value == true ||
-            !descriptionRef.current.value == true
+            !descriptionRef.current.value == true ||
+            !MBTIRef.current.value == true
         ) {
             //setFormValid(false);
             setNameValid(!nameRef.current.value);
@@ -70,6 +75,7 @@ export default function RegistrationComponent() {
             setPasswordValid(!passwordRef.current.value);
             setPasswordAgainValid(!passwordAgainRef.current.value);
             setDescriptionValid(!descriptionRef.current.value);
+            setMBTIValid(!descriptionRef.current.value);
             return false
         } else {
             //setFormValid(true);
@@ -78,6 +84,7 @@ export default function RegistrationComponent() {
             setPasswordValid(!passwordRef.current.value);
             setPasswordAgainValid(!passwordAgainRef.current.value);
             setDescriptionValid(!descriptionRef.current.value);
+            setMBTIValid(!descriptionRef.current.value);
             return true 
         }
     }
@@ -101,10 +108,8 @@ export default function RegistrationComponent() {
         Cookie.set("name", name, { secure: true, sameSite: "strict" });
         Cookie.set("login", login, { secure: true, sameSite: "strict" });
         Cookie.set("password", password, { secure: true, sameSite: "strict" });
-        Cookie.set("description", description, {
-            secure: true,
-            sameSite: "strict",
-        });
+        Cookie.set("description", description, { secure: true, sameSite: "strict", });
+        Cookie.set("MBTITYPE", MBTITYPE, { secure: true, sameSite: "strict", });
     }
 
     return (
@@ -160,8 +165,6 @@ export default function RegistrationComponent() {
                         required
                     />
                 </Form.Group>
-            </Form>
-            <Form>
                 <Form.Group className="mb-3">
                     <Form.Control
                         as="textarea"
@@ -178,9 +181,42 @@ export default function RegistrationComponent() {
                         *225 Символов максимум
                     </Form.Label>
                 </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Select
+                    onChange={ (e)=>{
+                        setMBTITYPE(e.target.value);
+                    } }
+                        aria-label='Ваш MBTI тип'
+                        ref={MBTIRef}
+                        isInvalid={MBTIValid}
+                        required
+                >
+                        <option value="INTJ">INTJ "Стратег"</option>
+                        <option value="INTP">INTP "Ученый"</option>
+                        <option value="ENTJ">ENTJ "Коммандир"</option>
+                        <option value="ENTP">ENTP "Полемист"</option>
+                        <option value="INFJ">INFJ "Активист"</option>
+                        <option value="INFP">INFP "Посредник"</option>
+                        <option value="ENFJ">ENFJ "Тренер"</option>
+                        <option value="ENFP">ENFP "Борец"</option>
+                        <option value="ISTJ">ISTJ "Администратор"</option>
+                        <option value="ISFJ">ISFJ "Защитник"</option>
+                        <option value="ESTJ">ESTJ "Менеджер"</option>
+                        <option value="ESFJ">ESFJ "Консул"</option>
+                        <option value="ISTP">ISTP "Виртуоз"</option>
+                        <option value="ISFP">ISFP "Артист"</option>
+                        <option value="ESTP">ESTP "Делец"</option>
+                        <option value="ESFP">ESFP "Развлекатель"</option>
+                    </Form.Select>
+                    <Form.Label className="text-muted">
+                        <a 
+                            href="https://www.16personalities.com/ru"
+                            target="_blank"
+                        >Пройти тест бесплатно</a>
+                    </Form.Label>
+                </Form.Group>
                 <Button variant="primary" type="button" onClick={formHandler}>
-                    {" "}
-                    Submit{" "}
+                    Submit
                 </Button>
             </Form>
         </Container>

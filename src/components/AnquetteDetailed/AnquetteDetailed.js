@@ -37,6 +37,7 @@ export default function AnquetteDetailed(props) {
                         &#8592; Back
                     </Link>
                     <h1>{user.name}</h1>
+                    <h4>[{user.mbtitype}]</h4>
                     <p>{user.description}</p>
                     <CommentsComponent 
                         AnquetteID={key} 

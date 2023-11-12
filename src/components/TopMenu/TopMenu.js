@@ -9,13 +9,13 @@ import Cookie from 'js-cookie';
 import {Link} from 'react-router-dom';
 
 
-export default function TopMenu(){ 
+export default function TopMenu(props){ 
     let [userName , setUserName] = useState('');
     useEffect(()=>{
         if(document.cookie.includes('name')){
             setUserName(Cookie.get('name'));
         }
-    } , [])
+    } , [props.ReRenderValue])
 
     function links() { 
         if(document.cookie.includes('name')){
@@ -44,6 +44,16 @@ export default function TopMenu(){
         <div className='TopMenu'>
             <Navbar expand="lg" className="bg-body-tertiary">
                   <Container>
+                        <Nav.Link 
+                            href='https://github.com/OlegSheetov' 
+                            target='_blank'
+                            className='GitHubLogo'
+                        >
+                            <img 
+                                src = {logo}
+                                alt = "GitHub" 
+                            />
+                         </Nav.Link>
                       <Navbar.Brand href='/'>Anquette</Navbar.Brand>
                         <Navbar.Toggle  />
                         <Navbar.Collapse >
@@ -52,15 +62,6 @@ export default function TopMenu(){
                                         Что такое Анкета ? 
                                     </Link>
                         </Navbar.Collapse>
-                        <Nav.Link 
-                            href='https://github.com/OlegSheetov' 
-                            target='_blank'
-                        >
-                            <img 
-                                src = {logo}
-                                alt = "GitHub" 
-                            />
-                         </Nav.Link>
                   </Container>
                 </Navbar>
         </div>

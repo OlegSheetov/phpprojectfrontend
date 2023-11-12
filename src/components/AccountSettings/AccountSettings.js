@@ -6,24 +6,33 @@ import { Button } from "react-bootstrap";
 import { Stack } from "react-bootstrap";
 import { ButtonGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-
-export default function AccountSettings() {
-    let [Name, setName] = useState("");
+export default function AccountSettings(props) { let [Name, setName] = useState("");
     let [Password, setPassword] = useState("");
     let [Description, setDescription] = useState("");
+    let [MBTITYPE, setMBTITYPE] = useState("");
 
     const NameRef = useRef();
     const PasswordRef = useRef();
+    const DescriptionRef = useRef();
+    const MBTIRef = useRef();
 
     const Navigate = useNavigate();
 
-    function Exit() {
+
+   function NavigateAndRefresh(props) { 
+        props.Update;
+        Navigate('/');
+    }
+
+    function Exit(props) {
         if (confirm("Are you sure?") == true) {
             Cookie.remove("name");
             Cookie.remove("password");
             Cookie.remove("login");
             Cookie.remove("description");
+            Cookie.remove("MBTITYPE");
             Navigate("/");
+            props.Update;
         }
     }
 
@@ -37,6 +46,7 @@ export default function AccountSettings() {
             payload.append("new_name", Name);
             payload.append("new_password", Password);
             payload.append("new_description", Description);
+            payload.append("new_mbtitype", MBTITYPE);
             fetch("http://localhost:80/.backend/index.php", {
                 method: "POST",
                 body: payload,
@@ -44,14 +54,12 @@ export default function AccountSettings() {
                 .then((response) => {
                     response.text();
                 })
-                .then((result) => {
-                    console.log(result)
-                })
                 .then((json) => {
                     console.log(json);
                     Cookie.set("name", Name);
                     Cookie.set("password", Password);
                     Cookie.set("description", Description);
+                    Cookie.set("MBTITYPE", MBTITYPE);
                     alert("Данные обновлены");
                 })
                 .catch((error) => console.log("error", error));
@@ -80,12 +88,12 @@ export default function AccountSettings() {
                     Cookie.remove("login");
                     Cookie.remove("password");
                     Cookie.remove("description");
+                    Cookie.remove("MBTITYPE");
                     Navigate("/");
                 })
                 .catch((error) => console.log("error", error));
         }
     }
-    const DescriptionRef = useRef();
 
     useEffect(() => {
         //  let payload = new FormData();
@@ -101,14 +109,21 @@ export default function AccountSettings() {
         NameRef.current.value = Cookie.get("name");
         PasswordRef.current.value = Cookie.get("password");
         DescriptionRef.current.value = Cookie.get("description");
+        MBTIRef.current.value = Cookie.get('MBTITYPE');
         setName(Cookie.get("name"));
         setPassword(Cookie.get("password"));
         setDescription(Cookie.get("description"));
+        setMBTITYPE(Cookie.get('MBTITYPE'))
     }, []);
 
     return (
         <>
             <div className="AccountSettings">
+                <input
+                    type="button" 
+                    onClick={NavigateAndRefresh}
+                    value='NavigateAndRefresh'
+                />
                 <Stack gap={3}>
                     <Form className="mt-5">
                         <Form.Group>
@@ -142,6 +157,34 @@ export default function AccountSettings() {
                                     );
                                 }}
                             />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Text>MBTI тип:</Form.Text>
+                    <Form.Select
+                    onChange={ (e)=>{
+                        setMBTITYPE(e.target.value);
+                    } }
+                        aria-label='Ваш MBTI тип'
+                        ref={MBTIRef}
+                >
+
+                        <option value="INTJ">INTJ "Стратег"</option>
+                        <option value="INTP">INTP "Ученый"</option>
+                        <option value="ENTJ">ENTJ "Коммандир"</option>
+                        <option value="ENTP">ENTP "Полемист"</option>
+                        <option value="INFJ">INFJ "Активист"</option>
+                        <option value="INFP">INFP "Посредник"</option>
+                        <option value="ENFJ">ENFJ "Тренер"</option>
+                        <option value="ENFP">ENFP "Борец"</option>
+                        <option value="ISTJ">ISTJ "Администратор"</option>
+                        <option value="ISFJ">ISFJ "Защитник"</option>
+                        <option value="ESTJ">ESTJ "Менеджер"</option>
+                        <option value="ESFJ">ESFJ "Консул"</option>
+                        <option value="ISTP">ISTP "Виртуоз"</option>
+                        <option value="ISFP">ISFP "Артист"</option>
+                        <option value="ESTP">ESTP "Делец"</option>
+                        <option value="ESFP">ESFP "Развлекатель"</option>
+                    </Form.Select>
                         </Form.Group>
                     </Form>
                     <ButtonGroup>

@@ -4,13 +4,12 @@ import { Form, Button , InputGroup , Card} from "react-bootstrap";
 import Cookie from 'js-cookie';
 
 export default function CommentsComponent(props) {
-
     // Ужастный спагетти код. 
     // Надеюсь что его никто не увидит.
 
     let [comments, setComments] = useState([]);
     let [CommentIDForChange, setCommentIDForChange] = useState('');
-    let[, Update] = useReducer(x=> x+1, 0);
+    const [UpdateValue, Update] = useReducer(x=> x+1, 0);
     const CommentRef = useRef();
     const SendRef = useRef();
     const ChangeAndSendRef = useRef();
@@ -54,7 +53,7 @@ export default function CommentsComponent(props) {
 
     function DeleteComment(CommentID){
         if(confirm('Вы уверены ?')){
-            alert('Deleted');
+            alert('Удалено.');
             let payload = new FormData();
             payload.append('__method', 'DeleteComment');
             payload.append('AnquetteID' , props.AnquetteID);
@@ -71,9 +70,11 @@ export default function CommentsComponent(props) {
                 }
             )
                .then(response => response.text())
-               .then(result => console.log(result))
-               .catch((error)=> console.error(error))
-                Update();
+                .then((result) => {
+                    console.log(result)
+                    Update();
+                })
+арий               .catch((error)=> console.error(error))
         }
     }
 
@@ -92,7 +93,7 @@ export default function CommentsComponent(props) {
     // Change or Update comment 
     function ChangeComment(){ 
         if(confirm('Вы уверены ?')){
-            alert('Comment changed !');
+            alert('Комментарий изменён!');
             let  payload = new FormData();
             payload.append('__method', 'UpdateComment');
             payload.append('AnquetteID', props.AnquetteID);
@@ -112,6 +113,7 @@ export default function CommentsComponent(props) {
                .then(response => response.text())
                 .then((result) => {
                     console.log(result);
+                    Update();
                 })
                .catch((error)=> console.error(error));
 
@@ -174,7 +176,7 @@ export default function CommentsComponent(props) {
     useEffect(() => {
         fetchComments();
         DisableCommentInputIfNotUserRegistered();
-    }, [Update]);
+    }, [UpdateValue]);
 
     return (
         <>
@@ -209,7 +211,7 @@ export default function CommentsComponent(props) {
                     <Card className='mt-2'  key={item.CommentID}>
                             <Card.Body>
                                 <Card.Title className="AnquetteCard_UserName">
-                                    {item.AuthorName}
+                                    {item.AuthorName}{' '}[{item.mbtitype}]
                                 </Card.Title>
                                 <Card.Text>{item.commentBody}</Card.Text>
                                 <Card.Text className='text-muted'>
