@@ -6,6 +6,7 @@ import { Button } from "react-bootstrap";
 import { Stack } from "react-bootstrap";
 import { ButtonGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import CommentsComponent from '../../components/CommentsComponent/CommentsComponent.js'
 export default function AccountSettings(props) { let [Name, setName] = useState("");
     let [Password, setPassword] = useState("");
     let [Description, setDescription] = useState("");
@@ -18,9 +19,8 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
 
     const Navigate = useNavigate();
 
-
-   function NavigateAndRefresh(props) { 
-        props.Update;
+    function NavigateAndReRender(){
+        props.ReRender();
         Navigate('/');
     }
 
@@ -31,8 +31,8 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
             Cookie.remove("login");
             Cookie.remove("description");
             Cookie.remove("MBTITYPE");
-            Navigate("/");
-            props.Update;
+            Cookie.remove("ID");
+            NavigateAndReRender();
         }
     }
 
@@ -89,7 +89,7 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
                     Cookie.remove("password");
                     Cookie.remove("description");
                     Cookie.remove("MBTITYPE");
-                    Navigate("/");
+                    NavigateAndReRender();
                 })
                 .catch((error) => console.log("error", error));
         }
@@ -121,8 +121,8 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
             <div className="AccountSettings">
                 <input
                     type="button" 
-                    onClick={NavigateAndRefresh}
-                    value='NavigateAndRefresh'
+                    onClick={NavigateAndReRender}
+                    value='NavigateAndReRender'
                 />
                 <Stack gap={3}>
                     <Form className="mt-5">
@@ -198,6 +198,9 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
                             Change
                         </Button>
                     </ButtonGroup>
+                    <CommentsComponent
+                        AnquetteID={Cookie.get('ID')} 
+                />
                 </Stack>
             </div>
         </>

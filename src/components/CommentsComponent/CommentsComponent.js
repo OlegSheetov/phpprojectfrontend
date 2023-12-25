@@ -74,7 +74,7 @@ export default function CommentsComponent(props) {
                     console.log(result)
                     Update();
                 })
-арий               .catch((error)=> console.error(error))
+               .catch((error)=> console.error(error))
         }
     }
 

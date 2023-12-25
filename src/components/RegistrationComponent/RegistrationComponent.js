@@ -9,7 +9,7 @@ import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import Cookie from "js-cookie";
 
-export default function RegistrationComponent() {
+export default function RegistrationComponent(props) {
     const Navigate = useNavigate();
     let [name, setName] = useState("");
     let [login, setLogin] = useState("");
@@ -33,6 +33,10 @@ export default function RegistrationComponent() {
     const descriptionRef = useRef();
     const MBTIRef = useRef();
 
+    function NavigateAndReRender(){
+        props.ReRender();
+        Navigate('/');
+    }
     function formHandler() {
         if (formValidation()) {
             saveCookie();
@@ -46,12 +50,22 @@ export default function RegistrationComponent() {
             fetch("http://localhost:80/.backend/index.php", {
                 method: "POST",
                 body: payload,
-            })
-                .then((response) => {
-                    response.text();
-                })
+            }) .then(response => response.text())
+                .then(result  => JSON.parse(result))
+                .then((json) => {
+                    if(json.response === 'NEW'){
+                        console.log(json);
+                        Cookie.set( "ID", json, { secure: true, sameSite: "strict" });
+// Почему то не хочет перенаправлять на главный экран.
+                        NavigateAndReRender();
+                    }
+                    if(json.response === "DUPLICATE"){
+                        console.log(json)
+                        alert('Такой никнейм и логин заняты . Пожалуйста измените их.');
+                    }
+                }
+                )
                 .catch((error) => console.error("error", error));
-            Navigate("/Login");
         }
     }
 
@@ -114,6 +128,11 @@ export default function RegistrationComponent() {
 
     return (
         <Container className="RegistrationComponent">
+            <input 
+                type="button"
+                onClick={NavigateAndReRender}
+                value='NavigateAndReRender'
+            />
             <Form noValidate>
                 <Form.Group className="mb-3">
                     <Form.Control

@@ -8,7 +8,7 @@ import Cookie from 'js-cookie';
 import {useNavigate} from 'react-router-dom';
 
 
-export default function LoginComponent(){ 
+export default function LoginComponent(props){ 
     const [login , setLogin] = useState('');
     const [name , setName] = useState('');
     const [password , setPassword] = useState('');
@@ -23,6 +23,13 @@ export default function LoginComponent(){
     const PasswordRef = useRef();
 
     const Navigate = useNavigate();
+
+
+
+    function NavigateAndReRender(){
+        props.ReRender();
+        Navigate('/')
+    }
 
     function loginHandler(e){ 
         LoginFormValidation();
@@ -66,7 +73,12 @@ export default function LoginComponent(){
                                json.UserData.mbtitype, 
                                {secure: true , samesite: 'strict'}
                            );
-                           Navigate('/');
+                           Cookie.set(
+                                'ID',
+                               json.UserData.id, 
+                               {secure: true , samesite: 'strict'}
+                           );
+                           NavigateAndReRender();
                        }else{ 
                            alert('User not found. Change something and try again.')
                        }
@@ -106,6 +118,11 @@ export default function LoginComponent(){
     }
     return(
         <Container className='LoginComponent'>
+            <input 
+                type="button"
+                onClick={NavigateAndReRender}
+                value="NavigateAndReRender"
+            />
                 <Card className='LoginComponent_Form'>
                     <Card.Body>
                         <Card.Title>Login</Card.Title>

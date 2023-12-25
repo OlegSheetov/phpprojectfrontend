@@ -1,4 +1,4 @@
-import React , { useState , useEffect } from 'react';
+import React , { useState , useEffect, useRef } from 'react';
 import './TopMenu.css';
 import logo from './githublogo.png';
 import Container from 'react-bootstrap/Container';
@@ -11,6 +11,8 @@ import {Link} from 'react-router-dom';
 
 export default function TopMenu(props){ 
     let [userName , setUserName] = useState('');
+    const ThemeCheckBox = useRef();
+
     useEffect(()=>{
         if(document.cookie.includes('name')){
             setUserName(Cookie.get('name'));
@@ -40,6 +42,7 @@ export default function TopMenu(props){
         }
     }
 
+
     return(
         <div className='TopMenu'>
             <Navbar expand="lg" className="bg-body-tertiary">
@@ -55,12 +58,17 @@ export default function TopMenu(props){
                             />
                          </Nav.Link>
                       <Navbar.Brand href='/'>Anquette</Navbar.Brand>
-                        <Navbar.Toggle  />
+                       <Navbar.Toggle  />
                         <Navbar.Collapse >
                             {links()}
-                                    <Link  className='link' to='/WhatIsAnquette'>
-                                        Что такое Анкета ? 
-                                    </Link>
+                            <Nav>
+                                <Link  className='link' to='/SearchByType'>
+                                    SearchByType
+                                </Link>
+                                <Link  className='link' to='/WhatIsAnquette'>
+                                    Что такое Анкета ? 
+                                </Link>
+                            </Nav>
                         </Navbar.Collapse>
                   </Container>
                 </Navbar>
