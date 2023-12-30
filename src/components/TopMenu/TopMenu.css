@@ -2,10 +2,9 @@
     z-index:10;
 }
 .link { 
+    text-decoration:none;
     margin: 10px;
-}
-.NameLink { 
-    font-weight: bold;
+    color: white;
 }
 .GitHubLogo {
     margin: 0px 20px;

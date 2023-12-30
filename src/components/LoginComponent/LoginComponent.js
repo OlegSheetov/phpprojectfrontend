@@ -37,9 +37,9 @@ export default function LoginComponent(props){
         if(LoginFormValidation()){
            let payload = new FormData(); 
             payload.append('__method' , 'Login' )
-            payload.append('name' , name);
-            payload.append('login' , login);
-            payload.append('password', password);
+            payload.append('name' , name.trim());
+            payload.append('login' , login.trim());
+            payload.append('password', password.trim());
             fetch(
                 "http://localhost:80/.backend/index.php",
                 {method: "POST" , body:payload}
@@ -118,11 +118,6 @@ export default function LoginComponent(props){
     }
     return(
         <Container className='LoginComponent'>
-            <input 
-                type="button"
-                onClick={NavigateAndReRender}
-                value="NavigateAndReRender"
-            />
                 <Card className='LoginComponent_Form'>
                     <Card.Body>
                         <Card.Title>Login</Card.Title>

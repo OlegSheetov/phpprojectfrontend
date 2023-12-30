@@ -119,11 +119,6 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
     return (
         <>
             <div className="AccountSettings">
-                <input
-                    type="button" 
-                    onClick={NavigateAndReRender}
-                    value='NavigateAndReRender'
-                />
                 <Stack gap={3}>
                     <Form className="mt-5">
                         <Form.Group>

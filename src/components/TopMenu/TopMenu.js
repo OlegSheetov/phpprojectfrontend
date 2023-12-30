@@ -23,7 +23,7 @@ export default function TopMenu(props){
         if(document.cookie.includes('name')){
             return (
              <Nav>
-                     <Link className='link' to='/AccountSettings' >
+                     <Link className='link text-light' to='/AccountSettings' >
                          {userName}
                      </Link>
              </Nav>

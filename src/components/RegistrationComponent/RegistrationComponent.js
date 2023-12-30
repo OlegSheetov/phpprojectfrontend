@@ -56,7 +56,7 @@ export default function RegistrationComponent(props) {
                     if(json.response === 'NEW'){
                         console.log(json);
                         Cookie.set( "ID", json, { secure: true, sameSite: "strict" });
-// Почему то не хочет перенаправлять на главный экран.
+                        console.log("I'm working!!!");
                         NavigateAndReRender();
                     }
                     if(json.response === "DUPLICATE"){
@@ -128,11 +128,6 @@ export default function RegistrationComponent(props) {
 
     return (
         <Container className="RegistrationComponent">
-            <input 
-                type="button"
-                onClick={NavigateAndReRender}
-                value='NavigateAndReRender'
-            />
             <Form noValidate>
                 <Form.Group className="mb-3">
                     <Form.Control

@@ -46,6 +46,8 @@ export default function App () {
        function getUser(id){ 
            return users.find((el) => el.id == id)
        }
+
+
         return (
             <BrowserRouter>
                 <div className="App bg-dark text-light" data-bs-theme='dark'>
