@@ -1,6 +1,6 @@
 import React , { useState , useEffect, useRef } from 'react';
 import './TopMenu.css';
-import logo from './githublogo.png';
+import logo from '../../icons8-handwritten-ocr-96.png';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -14,11 +14,19 @@ export default function TopMenu(props){
     const ThemeCheckBox = useRef();
 
     useEffect(()=>{
+        // Если у пользователя есть кукки с его именем , то запиши это в стейт , 
+        // который потом будет использоваться в ссылке на настройки аккаунта.
         if(document.cookie.includes('name')){
             setUserName(Cookie.get('name'));
         }
     } , [props.ReRenderValue])
 
+    /**
+     * links.
+     * Если у пользователя в кукки есть имя ,
+     * то эта функция показывает ссылки на настройки аккаунта 
+     * и уберает ссылки на логин и регистрацию. 
+     */
     function links() { 
         if(document.cookie.includes('name')){
             return (
@@ -45,7 +53,7 @@ export default function TopMenu(props){
 
     return(
         <div className='TopMenu'>
-            <Navbar expand="lg" className="bg-body-tertiary">
+            <Navbar expand="lg" className=" bg-transparent"  >
                   <Container>
                         <Nav.Link 
                             href='https://github.com/OlegSheetov' 

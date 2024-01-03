@@ -1,7 +1,17 @@
 .App{
     min-height: 100vh;
+    background-image: url('./beautiful-shot-top-mountain.jpg');
+    background-size:cover;
+    background-repeat: no-repeat;
 }
-.App-white{
-    height:100vh;
+.footer{
+    padding: 50px;
+    
 }
-* { box-sizing: border-box }
+.footer > div { 
+    width: 20%;
+    display :inline-block;
+}
+.footer > a { 
+    margin: 10px;
+}

@@ -12,6 +12,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    overflow-y:visible;
 }
 .AnquetteCard_card {
     width: 20rem;

@@ -24,18 +24,18 @@ export default function LoginComponent(props){
 
     const Navigate = useNavigate();
 
-
-
+    // Перенаправляет пользователя на главную страницу и обновляет главный компоненнт.
+    // Нужно чтобы в топ меню все отображалось корректно. 
     function NavigateAndReRender(){
         props.ReRender();
         Navigate('/')
     }
 
+    // Функция обрабатывающая форму логина.
     function loginHandler(e){ 
         LoginFormValidation();
-        //if(FormValid == true) { 
         if(LoginFormValidation()){
-           let payload = new FormData(); 
+            let payload = new FormData(); 
             payload.append('__method' , 'Login' )
             payload.append('name' , name.trim());
             payload.append('login' , login.trim());
@@ -47,6 +47,8 @@ export default function LoginComponent(props){
               .then(response => response.text())
                 .then(result => JSON.parse(result) )
               .then(json =>{
+                  // Если пользователь существует , то прилетает json с полем user_exists 
+                  // И если там true ，то записывает все данные в кукки.
                        if(json.user_exists == true){
                            Cookie.set(
                               'name' ,
@@ -80,7 +82,7 @@ export default function LoginComponent(props){
                            );
                            NavigateAndReRender();
                        }else{ 
-                           alert('User not found. Change something and try again.')
+                           alert('Пользователь не найден. Измени что-нибудь и попробуй снова. ')
                        }
                        
                    } 
@@ -92,6 +94,7 @@ export default function LoginComponent(props){
 
 
     useEffect (()=>{
+        // Это автозаполнение полей ввода если в кукки есть имя и пароль. 
         if(document.cookie.includes('name'&&'login'&&'password')){
             NameRef.current.value = Cookie.get('name');
             LoginRef.current.value = Cookie.get('login');
@@ -103,6 +106,9 @@ export default function LoginComponent(props){
     } , [])
 
 
+    // Функция проверяющая  , что пользователь не оставил их пустыми и возвращает 
+    // true или false в случае если они пустые и если они заполнены. 
+    // Используется в LoginHandler перед отправкой данных на сервер.
     function LoginFormValidation(){ 
         if(!LoginRef.current.value == true && !PasswordRef.current.value == true
             && !NameRef.current.value == true) { 

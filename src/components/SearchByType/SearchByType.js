@@ -9,13 +9,18 @@ export default function SearchByType(props){
     const [SortedUsers, setSortedUsers] = useState(props.users);
     const MBTIRef = useRef('');
 
+    
+    /**
+     * GetUsersByType.
+     *   Сортирует пользователей по типу и выводит на экран.
+     */
     function GetUsersByType(){
         setSortedUsers(props.users.filter((el)=>el.mbtitype == MBTIRef.current.value ));
     }
 
 
     return(
-        <div className='SearchByType'>
+        <div className='SearchByType mt-5'>
             <Container>
                 <Form.Group className="mb-3 ">
                     <Stack direction='horizontal' gap={3}>

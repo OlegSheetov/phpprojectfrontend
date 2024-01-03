@@ -16,7 +16,7 @@ export default function CommentsComponent(props) {
     const ChangeCommentButtonRef = useRef();
 
 
-
+    // Извлекает комментарии к определенной анкете. 
    function fetchComments() {
        let payload = new FormData(); 
        payload.append('__method', 'GetAllComments');
@@ -33,6 +33,8 @@ export default function CommentsComponent(props) {
           })
    }
 
+    // Отправляет новый коммент к текущей анкете. 
+    // Просто упаковывает все данные и отправляет их на сервер.
     function sendNewComment(){ 
         let payload = new FormData();
         payload.append('__method', 'CreateComment');
@@ -51,6 +53,9 @@ export default function CommentsComponent(props) {
             Update();
     }
 
+    //Просто удаляет коммент.
+    //Принимает ID комментария. Такой прием нужен для использования функции в JSX 
+    //коде . 
     function DeleteComment(CommentID){
         if(confirm('Вы уверены ?')){
             alert('Удалено.');
@@ -78,6 +83,8 @@ export default function CommentsComponent(props) {
         }
     }
 
+    // Функция хелпер , которая вписывает значения комментария в поле ввода 
+    // для его изменения. 
     function SetCurrentCommentToInput(
         CurrentCommentBody,
         CommentID
@@ -90,7 +97,8 @@ export default function CommentsComponent(props) {
     }
 
 
-    // Change or Update comment 
+    // Изменеяет комментарий 
+    // А в конце переключает кнопки для изменения комментария.  
     function ChangeComment(){ 
         if(confirm('Вы уверены ?')){
             alert('Комментарий изменён!');
@@ -125,6 +133,7 @@ export default function CommentsComponent(props) {
         }
     }
 
+    // Включает кнопку удаления комментария
     function ShowDeleteButton(AuthorName, CommentID){
         if(Cookie.get('name') === AuthorName){
             return (
@@ -137,6 +146,7 @@ export default function CommentsComponent(props) {
         }
     }
 
+    // Включает кнопку изменения комментария.
     function ShowChangeCommentButton(
         AuthorName,
         CurrentCommentBody,
@@ -163,6 +173,7 @@ export default function CommentsComponent(props) {
         }
     }
 
+    // Отключает поле для ввода комментария и кнопку отправить. 
     function DisableCommentInputIfNotUserRegistered(){
         if(Cookie.get('name')){
             CommentRef.current.disabled = false;

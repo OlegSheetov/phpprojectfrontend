@@ -19,11 +19,16 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
 
     const Navigate = useNavigate();
 
+    // Перенаправляет пользователя на главную страницу и обновляет главный компоненнт.
+    // Нужно чтобы в топ меню все отображалось корректно. 
     function NavigateAndReRender(){
         props.ReRender();
         Navigate('/');
     }
 
+    // Делает возможным выход из аккаунта. 
+    // Удаляет из кукки все данные и перенаправляет пользователя на главный экран
+    // с его обновлением.
     function Exit(props) {
         if (confirm("Are you sure?") == true) {
             Cookie.remove("name");
@@ -36,6 +41,9 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
         }
     }
 
+
+    // Отправляе измененные данные на бэкенд , а так же сохраняет новые данные в 
+    // кукки
     function Change() {
         if (confirm("Are you sure?") == true) {
             let payload = new FormData();
@@ -66,6 +74,7 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
         }
     }
 
+    // Удаляет аккаунт и все его данные в кукки.
     function DeleteAccount() {
         console.log("Click Delete");
         if (confirm("Are you sure?") == true) {
@@ -96,20 +105,12 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
     }
 
     useEffect(() => {
-        //  let payload = new FormData();
-        //   payload.append('__method' , 'GetOneUser' )
-        //   payload.append('name' , Cookie.get('name'));
-        //   payload.append('login' , Cookie.get('login'));
-        //   fetch( "http://localhost:80/.backend/index.php",
-        //       { method: "POST" , body:payload })
-        //       .then((response)=>{response.text()})
-        //       .then(result =>console.log(result))
-        //       .catch(error => console.log('error', error));
-
+        // Вписывает имя , пароль , описание и тип в поля ввода из данных кукки. 
         NameRef.current.value = Cookie.get("name");
         PasswordRef.current.value = Cookie.get("password");
         DescriptionRef.current.value = Cookie.get("description");
         MBTIRef.current.value = Cookie.get('MBTITYPE');
+        // Так же вписывает значения из кукки в локальные стейты. 
         setName(Cookie.get("name"));
         setPassword(Cookie.get("password"));
         setDescription(Cookie.get("description"));

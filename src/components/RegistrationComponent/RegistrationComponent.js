@@ -11,6 +11,7 @@ import Cookie from "js-cookie";
 
 export default function RegistrationComponent(props) {
     const Navigate = useNavigate();
+    // Стейты для записи значений из полей ввода для отправки их на сервер.
     let [name, setName] = useState("");
     let [login, setLogin] = useState("");
     let [password, setPassword] = useState("");
@@ -18,6 +19,8 @@ export default function RegistrationComponent(props) {
     let [description, setDescription] = useState("");
     let [MBTITYPE, setMBTITYPE] = useState("");
 
+    // Стейты для валидации полей ввода.
+    // Содержат булевое значение false.
     let [nameValid, setNameValid] = useState(false);
     let [loginValid, setLoginValid] = useState(false);
     let [passwordValid, setPasswordValid] = useState(false);
@@ -33,11 +36,16 @@ export default function RegistrationComponent(props) {
     const descriptionRef = useRef();
     const MBTIRef = useRef();
 
-    function NavigateAndReRender(){
+    // Перенаправляет пользователя на главную страницу и обновляет главный компоненнт.
+    // Нужно чтобы в топ меню все отображалось корректно.
+    function NavigateAndReRender() {
         props.ReRender();
-        Navigate('/');
+        Navigate("/");
     }
+
+    // Функция обрабатывающая форму регистрации. Не принимает параметров.
     function formHandler() {
+        // Проверка на заполненность полей ввода. Если все ок отправляет данные на сервак.
         if (formValidation()) {
             saveCookie();
             let payload = new FormData();
@@ -50,21 +58,30 @@ export default function RegistrationComponent(props) {
             fetch("http://localhost:80/.backend/index.php", {
                 method: "POST",
                 body: payload,
-            }) .then(response => response.text())
-                .then(result  => JSON.parse(result))
+            })
+                .then((response) => response.text())
+                .then((result) => JSON.parse(result))
                 .then((json) => {
-                    if(json.response === 'NEW'){
+                    // После проверки нет ли в базе данных пользователя с таким же именем и логином,
+                    // сервак присылает json с ответом.
+                    // И если в ответе NEW , что значит что пользователь новый - то данные записываются в кукки.
+                    // Если нет - то выводит сообщение что такой пользователь уже есть , придумай новое имя и логин.
+                    if (json.response === "NEW") {
                         console.log(json);
-                        Cookie.set( "ID", json, { secure: true, sameSite: "strict" });
+                        Cookie.set("ID", json, {
+                            secure: true,
+                            sameSite: "strict",
+                        });
                         console.log("I'm working!!!");
                         NavigateAndReRender();
                     }
-                    if(json.response === "DUPLICATE"){
-                        console.log(json)
-                        alert('Такой никнейм и логин заняты . Пожалуйста измените их.');
+                    if (json.response === "DUPLICATE") {
+                        console.log(json);
+                        alert(
+                            "Такой никнейм и логин заняты . Пожалуйста измените их."
+                        );
                     }
-                }
-                )
+                })
                 .catch((error) => console.error("error", error));
         }
     }
@@ -90,7 +107,7 @@ export default function RegistrationComponent(props) {
             setPasswordAgainValid(!passwordAgainRef.current.value);
             setDescriptionValid(!descriptionRef.current.value);
             setMBTIValid(!descriptionRef.current.value);
-            return false
+            return false;
         } else {
             //setFormValid(true);
             setNameValid(!nameRef.current.value);
@@ -99,15 +116,29 @@ export default function RegistrationComponent(props) {
             setPasswordAgainValid(!passwordAgainRef.current.value);
             setDescriptionValid(!descriptionRef.current.value);
             setMBTIValid(!descriptionRef.current.value);
-            return true 
+            return true;
         }
     }
 
+    /**
+     * AudoMakeLogin.
+     * Берет имя из поля формы и записывает его
+     * в поле с логином и его стейт.
+     *
+     * @param {} e
+     */
     function AudoMakeLogin(e) {
         loginRef.current.value = `@${e.target.value}Login`;
         setLogin(loginRef.current.value);
     }
 
+    /**
+     * checkPassword.
+     * Проверяет совпадают ли оба поля с паролями. Если нет ,
+     * то поля подсвечиваются красным.
+     *
+     * @param {} e
+     */
     function checkPassword(e) {
         if (e.target.value != passwordRef.current.value) {
             setPasswordValid(true);
@@ -118,12 +149,19 @@ export default function RegistrationComponent(props) {
         }
     }
 
+    /**
+     * saveCookie.
+     * ф-ция хелпер. Записывает имя , пароль , логин , описание и тип в кукки.
+     */
     function saveCookie() {
         Cookie.set("name", name, { secure: true, sameSite: "strict" });
         Cookie.set("login", login, { secure: true, sameSite: "strict" });
         Cookie.set("password", password, { secure: true, sameSite: "strict" });
-        Cookie.set("description", description, { secure: true, sameSite: "strict", });
-        Cookie.set("MBTITYPE", MBTITYPE, { secure: true, sameSite: "strict", });
+        Cookie.set("description", description, {
+            secure: true,
+            sameSite: "strict",
+        });
+        Cookie.set("MBTITYPE", MBTITYPE, { secure: true, sameSite: "strict" });
     }
 
     return (
@@ -197,14 +235,14 @@ export default function RegistrationComponent(props) {
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Select
-                    onChange={ (e)=>{
-                        setMBTITYPE(e.target.value);
-                    } }
-                        aria-label='Ваш MBTI тип'
+                        onChange={(e) => {
+                            setMBTITYPE(e.target.value);
+                        }}
+                        aria-label="Ваш MBTI тип"
                         ref={MBTIRef}
                         isInvalid={MBTIValid}
                         required
-                >
+                    >
                         <option value="INTJ">INTJ "Стратег"</option>
                         <option value="INTP">INTP "Ученый"</option>
                         <option value="ENTJ">ENTJ "Коммандир"</option>
@@ -223,10 +261,12 @@ export default function RegistrationComponent(props) {
                         <option value="ESFP">ESFP "Развлекатель"</option>
                     </Form.Select>
                     <Form.Label className="text-muted">
-                        <a 
+                        <a
                             href="https://www.16personalities.com/ru"
                             target="_blank"
-                        >Пройти тест бесплатно</a>
+                        >
+                            Пройти тест бесплатно
+                        </a>
                     </Form.Label>
                 </Form.Group>
                 <Button variant="primary" type="button" onClick={formHandler}>

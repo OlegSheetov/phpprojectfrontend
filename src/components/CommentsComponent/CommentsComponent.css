@@ -1,4 +1,7 @@
  
 .CommentsComponent{
 }
+:disabled{ 
+    cursor:not-allowed;
+}
 

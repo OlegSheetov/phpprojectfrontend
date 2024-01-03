@@ -1,5 +1,8 @@
  
 .WhatIsAnquette{
     /* Place scss code here */
+    background: linear-gradient(rgba(255, 255 , 255 , 0),  lightgray);
+    box-shadow: 0px 55px 20px lightgray;
+    
 }
 

@@ -20,6 +20,12 @@ export default function App () {
     let usersRef = useRef();
     const [RerenderValue , ReRender] = useReducer(  x=> x+1, 0);
 
+    // Функция которая запрашивает с сервака всех пользователей. Не принимает параметров.
+    // Каждый раз список пользователей приходит в рандомном порядке. 
+    // После получения записывает полученный обьект с пользователями в стейт Users , 
+    // а так же в хранилище сессии , чтобы , когда пользователь перейдет на страницу карточики
+    // и по какой либо причине обновит страницу , программа не теряла данные и не выдавала 
+    // ошибку.
     function fetchUsers() { 
        fetch("http://localhost:80/.backend/index.php", {method: "GET"})
             .then(response => response.text())
@@ -31,6 +37,8 @@ export default function App () {
            .catch(error => console.log('error', error));
     }
 
+    // Записывает данные с пользователями при перезагрузке страницы 
+    // в стейт Users из сессионного хранилища.  
     function SaveUsersToSessionStorage(){ 
             if(sessionStorage.Users == '[]' || sessionStorage.Users != undefined){ 
                 setUsers(JSON.parse(sessionStorage.Users))
@@ -42,7 +50,7 @@ export default function App () {
         SaveUsersToSessionStorage();
     }, [RerenderValue])
 
-
+    // Ищет определенную запись в стейте по id. 
        function getUser(id){ 
            return users.find((el) => el.id == id)
        }
@@ -50,7 +58,7 @@ export default function App () {
 
         return (
             <BrowserRouter>
-                <div className="App bg-dark text-light" data-bs-theme='dark'>
+                <div className="App">
                     <TopMenu
                         ReRenderValue={RerenderValue}
                     />
@@ -86,6 +94,20 @@ export default function App () {
                                 />
                             </Routes>
                     </Container>
+                    <div className="footer">
+                        <div>
+                            <a href="https://www.freepik.com/free-photo/beautiful-shot-top-mountain_11111354.htm
+                            #query=picks&position=0&from_view=search&track=sph&uuid=218e7aa6-c4a0-43bd-8f30-1d81ad3084bb">Image by wirestock</a> on Freepik
+                        </div>
+                        <div>
+                            <a target="_blank" href="https://icons8.com/icon/15108/handwritten-ocr">Handwritten OCR</a> icon by 
+                            <a target="_blank" href="https://icons8.com">Icons8</a>
+                        </div>
+                        <div>
+                            <a target="_blank" href="https://icons8.com/icon/3059/undo">Undo</a> icon by
+                            <a target="_blank" href="https://icons8.com">Icons8</a>
+                        </div>
+                    </div>
                 </div>
             </BrowserRouter>
         );

@@ -1,4 +1,5 @@
 import React , { useState, useEffect} from "react";
+import back from '../../icons8-undo-50.png'
 import "./AnquetteDetailed.css";
 import { useParams, Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
@@ -14,7 +15,7 @@ export default function AnquetteDetailed(props) {
 
     function getUser(id){ 
         //  Если в сессионном хранилище нет данных , то используй проп. 
-        //  Такой вот плат Б.
+        //  Такой вот план Б.
         if (sessionStorage.Users == undefined){
             let users = props.users;
             return users.find((el) => el.id == id)
@@ -34,7 +35,7 @@ export default function AnquetteDetailed(props) {
             <>
                 <Container className="AnquetteDetailed">
                     <Link to={-1} className="Link">
-                        &#8592; Back
+                        <img src={back} alt="back" />
                     </Link>
                     <h1>{user.name}</h1>
                     <h4>[{user.mbtitype}]</h4>
