@@ -12,7 +12,8 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    overflow-y:visible;
+    overflow-y:scroll;
+    max-height: 61vh;
 }
 .AnquetteCard_card {
     width: 20rem;

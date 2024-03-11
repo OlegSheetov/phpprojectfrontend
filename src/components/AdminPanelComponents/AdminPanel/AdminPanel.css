@@ -1,0 +1,12 @@
+ 
+.AdminPanel{
+    /* Place scss code here */
+}
+.MenuButton{ 
+    width: 65px;
+    opacity:50%;
+}
+.MenuButton:hover { 
+    opacity:100%;
+}
+

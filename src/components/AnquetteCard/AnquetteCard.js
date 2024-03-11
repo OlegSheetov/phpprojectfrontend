@@ -9,7 +9,7 @@ export default function AnquetteCard(props){
     return(
         <div className='AnquetteCard'>
              <h1 className='AnquetteCard_header'>Анкеты</h1>
-             <div className='AnquetteCard_List'> 
+             <div className=' AnquetteCard_List' > 
                  {props.users.map((item)=>(
                      <Link to={`/${item.id}`} className='Anquette_link' key={item.id}>
                      <Card className='AnquetteCard_card'>

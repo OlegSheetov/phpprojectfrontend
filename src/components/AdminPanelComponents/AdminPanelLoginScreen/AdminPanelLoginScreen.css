@@ -1,0 +1,11 @@
+ 
+.AdminPanelLoginScreen{
+}
+.AdminPanelLoginScreen_LoginForm{
+    max-width:400px;
+    margin: 100px auto;
+}
+.AdminPanelLoginScreen_FormController{
+    box-shadow: 0px -40px 40px white;
+}
+

@@ -1,0 +1,7 @@
+ 
+.ModerateList{
+    /* Place scss code here */
+    overflow-y: scroll;
+    height: 70vh;
+}
+

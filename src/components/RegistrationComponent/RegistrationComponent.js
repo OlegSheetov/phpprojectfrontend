@@ -1,3 +1,8 @@
+
+
+    // TODO: Переписать валидацию формы как я это сделал на странице логина
+    // админа и использовать хелпер FETCH
+
 import React, { useState, useRef } from "react";
 import "./RegistrationComponent.css";
 import Stack from "react-bootstrap/Stack";
@@ -8,6 +13,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import Cookie from "js-cookie";
+import Fetch from '../../helpers/fetch.js';
 
 export default function RegistrationComponent(props) {
     const Navigate = useNavigate();
@@ -29,12 +35,12 @@ export default function RegistrationComponent(props) {
     let [formValid, setFormValid] = useState(false);
     let [MBTIValid, setMBTIValid] = useState(false);
 
-    const nameRef = useRef();
-    const loginRef = useRef();
-    const passwordRef = useRef();
-    const passwordAgainRef = useRef();
-    const descriptionRef = useRef();
-    const MBTIRef = useRef();
+        const nameRef = useRef();
+        const loginRef = useRef();
+        const passwordRef = useRef();
+        const passwordAgainRef = useRef();
+        const descriptionRef = useRef();
+        const MBTIRef = useRef();
 
     // Перенаправляет пользователя на главную страницу и обновляет главный компоненнт.
     // Нужно чтобы в топ меню все отображалось корректно.
@@ -48,41 +54,36 @@ export default function RegistrationComponent(props) {
         // Проверка на заполненность полей ввода. Если все ок отправляет данные на сервак.
         if (formValidation()) {
             saveCookie();
-            let payload = new FormData();
-            payload.append("__method", "InsertNewUser");
-            payload.append("name", name);
-            payload.append("login", login);
-            payload.append("password", password);
-            payload.append("description", description);
-            payload.append("MBTITYPE", MBTITYPE);
-            fetch("http://localhost:80/.backend/index.php", {
-                method: "POST",
-                body: payload,
-            })
-                .then((response) => response.text())
-                .then((result) => JSON.parse(result))
-                .then((json) => {
-                    // После проверки нет ли в базе данных пользователя с таким же именем и логином,
-                    // сервак присылает json с ответом.
-                    // И если в ответе NEW , что значит что пользователь новый - то данные записываются в кукки.
-                    // Если нет - то выводит сообщение что такой пользователь уже есть , придумай новое имя и логин.
-                    if (json.response === "NEW") {
-                        console.log(json);
-                        Cookie.set("ID", json, {
-                            secure: true,
-                            sameSite: "strict",
-                        });
-                        console.log("I'm working!!!");
-                        NavigateAndReRender();
-                    }
-                    if (json.response === "DUPLICATE") {
-                        console.log(json);
-                        alert(
-                            "Такой никнейм и логин заняты . Пожалуйста измените их."
-                        );
-                    }
-                })
-                .catch((error) => console.error("error", error));
+                    Fetch("POST",{ 
+                        __method: "InsertNewUser", 
+                        name: name, 
+                        login: login, 
+                        password: password, 
+                        description: description, 
+                        MBTITYPE: MBTITYPE
+                    },
+                       (json)=>{
+                           // После проверки нет ли в базе данных 
+                           // пользователя с таким же именем и логином,
+                            // сервак присылает json с ответом.
+                           // И если в ответе NEW , что значит что пользователь новый 
+                           // - то данные записываются в кукки.
+                           // Если нет - то выводит сообщение что такой пользователь
+                           // уже есть , придумай новое имя и логин.
+                            if (json.response == "NEW") {
+                                Cookie.set("ID", json, {
+                                    secure: true,
+                                    sameSite: "strict",
+                                });
+                                NavigateAndReRender();
+                            }
+                            if (json.response == "DUPLICATE") {
+                                console.log(json);
+                                alert(
+                                 "Такой никнейм и логин заняты . Пожалуйста измените их."
+                                );
+                            }
+                    }) 
         }
     }
 
@@ -98,24 +99,25 @@ export default function RegistrationComponent(props) {
             !passwordRef.current.value == true ||
             !passwordAgainRef.current.value == true ||
             !descriptionRef.current.value == true ||
-            !MBTIRef.current.value == true
+            !MBTIRef.current.value ==  true
         ) {
-            //setFormValid(false);
-            setNameValid(!nameRef.current.value);
-            setLoginValid(!loginRef.current.value);
-            setPasswordValid(!passwordRef.current.value);
-            setPasswordAgainValid(!passwordAgainRef.current.value);
-            setDescriptionValid(!descriptionRef.current.value);
-            setMBTIValid(!descriptionRef.current.value);
+            setNameValid(true);
+            setLoginValid(true);
+            setPasswordValid(true);
+            setPasswordAgainValid(true);
+            setDescriptionValid(true);
+            setMBTIValid(true);
+            alert('false')
+            console.log(!nameRef.current.value)
             return false;
         } else {
-            //setFormValid(true);
-            setNameValid(!nameRef.current.value);
-            setLoginValid(!loginRef.current.value);
-            setPasswordValid(!passwordRef.current.value);
-            setPasswordAgainValid(!passwordAgainRef.current.value);
-            setDescriptionValid(!descriptionRef.current.value);
-            setMBTIValid(!descriptionRef.current.value);
+            setNameValid(false);
+            setLoginValid(false);
+            setPasswordValid(false);
+            setPasswordAgainValid(false);
+            setDescriptionValid(false);
+            setMBTIValid(false);
+            alert('true')
             return true;
         }
     }

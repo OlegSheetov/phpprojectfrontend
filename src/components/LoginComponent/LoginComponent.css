@@ -6,4 +6,7 @@
     max-width: 400px;
     margin: auto;
 }
+.LoginComponent_FormControl{
+    box-shadow: 0px -40px 60px white;
+}
 

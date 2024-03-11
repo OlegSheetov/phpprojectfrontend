@@ -2,10 +2,10 @@ import React, {useEffect, useState, useRef, useReducer } from "react";
 import './CommentsComponent.css';
 import { Form, Button , InputGroup , Card} from "react-bootstrap";
 import Cookie from 'js-cookie';
+import Fetch from '../../helpers/fetch.js'
 
 export default function CommentsComponent(props) {
-    // Ужастный спагетти код. 
-    // Надеюсь что его никто не увидит.
+    // Ужастный код. Надеюсь что его никто не увидит.
 
     let [comments, setComments] = useState([]);
     let [CommentIDForChange, setCommentIDForChange] = useState('');
@@ -17,38 +17,26 @@ export default function CommentsComponent(props) {
 
 
     // Извлекает комментарии к определенной анкете. 
-   function fetchComments() {
-       let payload = new FormData(); 
-       payload.append('__method', 'GetAllComments');
-       payload.append('AnquetteID' , props.AnquetteID);
-
-       fetch(
-           'http://localhost:80/.backend/index.php',
-           {method: 'POST' , body: payload}
-       )
-          .then(response => response.text())
-          .then(result => JSON.parse(result))
-          .then((json)=>{
-              setComments(json);
-          })
-   }
-
+       function fetchComments() {
+           Fetch('POST', 
+               { __method: 'GetAllComments', AnquetteID: props.AnquetteID },
+                (json)=>{ setComments(json) }
+               )
+       }
+    
     // Отправляет новый коммент к текущей анкете. 
     // Просто упаковывает все данные и отправляет их на сервер.
     function sendNewComment(){ 
-        let payload = new FormData();
-        payload.append('__method', 'CreateComment');
-        payload.append('AnquetteID', props.AnquetteID);
-        payload.append('AuthorName', Cookie.get('name'));
-        payload.append('CommentBody', CommentRef.current.value);
-
-        fetch(
-            'http://localhost:80/.backend/index.php',
-            {method: 'POST', body:payload}
-        )
-           .then(response => response.text())
-           .then(result => console.log(result))
-           .catch((error)=> console.error(error))
+            Fetch('POST',
+                { __method: 'CreateComment',
+                    AnquetteID: props.AnquetteID,
+                    AuthorName: Cookie.get('name'),
+                    CommentBody: CommentRef.current.value
+                },
+                (json)=>{
+                    setComments(json)
+                }
+            )
             CommentRef.current.value = '';
             Update();
     }
@@ -56,32 +44,39 @@ export default function CommentsComponent(props) {
     //Просто удаляет коммент.
     //Принимает ID комментария. Такой прием нужен для использования функции в JSX 
     //коде . 
+    //
+    //
+    //Понимаю что не так красиво как могло бы быть , но оно по крайней мере работает. 
+    //А если работает то не трогай. 
+    //
+    //P.S: Уже питался рефактрорить, и уже ломал.
     function DeleteComment(CommentID){
         if(confirm('Вы уверены ?')){
             alert('Удалено.');
-            let payload = new FormData();
-            payload.append('__method', 'DeleteComment');
-            payload.append('AnquetteID' , props.AnquetteID);
-            payload.append('CommentID', CommentID );
-            payload.append('AuthorLogin', Cookie.get('login'));
-            payload.append('AuthorName' , Cookie.get('name'));
-            payload.append('AuthorPassword' , Cookie.get('password'));
+                   let payload = new FormData();
+                   payload.append('__method', 'DeleteComment');
+                   payload.append('AnquetteID' , props.AnquetteID);
+                   payload.append('CommentID', CommentID );
+                   payload.append('AuthorLogin', Cookie.get('login'));
+                   payload.append('AuthorName' , Cookie.get('name'));
+                   payload.append('AuthorPassword' , Cookie.get('password'));
 
-            fetch(
-                'http://localhost:80/.backend/index.php',
-                {
-                    method: 'POST',
-                    body:payload
+                   fetch(
+                       'http://localhost:80/backend/index.php',
+                       {
+                           method: 'POST',
+                           body:payload
+                       }
+                   )
+                      .then(response => response.text())
+                       .then((result) => {
+                           Update();
+                       })
+                      .catch((error)=> console.error(error))
+
                 }
-            )
-               .then(response => response.text())
-                .then((result) => {
-                    console.log(result)
-                    Update();
-                })
-               .catch((error)=> console.error(error))
-        }
     }
+
 
     // Функция хелпер , которая вписывает значения комментария в поле ввода 
     // для его изменения. 
@@ -102,28 +97,38 @@ export default function CommentsComponent(props) {
     function ChangeComment(){ 
         if(confirm('Вы уверены ?')){
             alert('Комментарий изменён!');
-            let  payload = new FormData();
-            payload.append('__method', 'UpdateComment');
-            payload.append('AnquetteID', props.AnquetteID);
-            payload.append('CommentID', CommentIDForChange);
-            payload.append('AuthorName', Cookie.get('name'));
-            payload.append('AuthorLogin', Cookie.get('login'));
-            payload.append('AuthorPassword', Cookie.get('password'));
-            payload.append('CommentBody' , CommentRef.current.value );
+            //      let  payload = new FormData();
+            //      payload.append('__method', 'UpdateComment');
+            //      payload.append('AnquetteID', props.AnquetteID);
+            //      payload.append('CommentID', CommentIDForChange);
+            //      payload.append('AuthorName', Cookie.get('name'));
+            //      payload.append('AuthorLogin', Cookie.get('login'));
+            //      payload.append('AuthorPassword', Cookie.get('password'));
+            //      payload.append('CommentBody' , CommentRef.current.value );
 
-            fetch(
-                'http://localhost:80/.backend/index.php',
-                {
-                    method: 'POST',
-                    body:payload
-                }
-            )
-               .then(response => response.text())
-                .then((result) => {
-                    console.log(result);
-                    Update();
-                })
-               .catch((error)=> console.error(error));
+            //      fetch(
+            //          'http://localhost:80/backend/index.php',
+            //          {
+            //              method: 'POST',
+            //              body:payload
+            //          }
+            //      )
+            //         .then(response => response.text())
+            //          .then((result) => {
+            //              console.log(result);
+            //              Update();
+            //          })
+            //         .catch((error)=> console.error(error));
+
+            Fetch("POST", { 
+                __method: 'UpdateComment', 
+                AnquetteID: props.AnquetteID,
+                CommentID: CommentIDForChange, 
+                AuthorName: Cookie.get('name'),
+                AuthorLogin: Cookie.get('login'),
+                AurthoPassword: Cookie.get('password'),
+                CommentBody: CommentRef.current.value
+            })
 
             ChangeAndSendRef.current.className = "d-none"; 
             SendRef.current.className = "btn btn-success";
@@ -135,7 +140,7 @@ export default function CommentsComponent(props) {
 
     // Включает кнопку удаления комментария
     function ShowDeleteButton(AuthorName, CommentID){
-        if(Cookie.get('name') === AuthorName){
+        if(Cookie.get('name') === AuthorName || Cookie.get('Admin')){
             return (
                 <Button 
                     variant='danger'
@@ -175,23 +180,22 @@ export default function CommentsComponent(props) {
 
     // Отключает поле для ввода комментария и кнопку отправить. 
     function DisableCommentInputIfNotUserRegistered(){
-        if(Cookie.get('name')){
-            CommentRef.current.disabled = false;
-            SendRef.current.disabled = false;
-        }else { 
-            CommentRef.current.disabled = true;
-            SendRef.current.disabled = true;
+        if(props.hideSwitch != 'hide'){
+            if(Cookie.get('name')){
+                CommentRef.current.disabled = false;
+                SendRef.current.disabled = false;
+            }else { 
+                CommentRef.current.disabled = true;
+                SendRef.current.disabled = true;
+            }
         }
     }
 
-    useEffect(() => {
-        fetchComments();
-        DisableCommentInputIfNotUserRegistered();
-    }, [UpdateValue]);
-
-    return (
-        <>
-            <div className="CommentsComponent">
+    function HideCommentInputField(hideSwitch) { 
+        if(hideSwitch === 'hide'){ 
+            return ''
+        }else { 
+            return (
                     <Form>
                         <Form.Text>Комментарии:</Form.Text>
                         <InputGroup>
@@ -218,6 +222,20 @@ export default function CommentsComponent(props) {
                             </Button>
                         </InputGroup>
                     </Form>
+            )
+        }
+    }
+
+    useEffect(() => {
+        fetchComments();
+
+        DisableCommentInputIfNotUserRegistered();
+    }, [UpdateValue]);
+
+    return (
+        <>
+            <div className="CommentsComponent">
+                {HideCommentInputField(props.hideSwitch)}
                 {comments.map((item) => (
                     <Card className='mt-2'  key={item.CommentID}>
                             <Card.Body>

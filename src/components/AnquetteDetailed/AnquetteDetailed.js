@@ -1,5 +1,5 @@
 import React , { useState, useEffect} from "react";
-import back from '../../icons8-undo-50.png'
+import back from '../../icons8-undo-50.webp'
 import "./AnquetteDetailed.css";
 import { useParams, Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";

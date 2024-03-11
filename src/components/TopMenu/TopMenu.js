@@ -1,6 +1,6 @@
 import React , { useState , useEffect, useRef } from 'react';
 import './TopMenu.css';
-import logo from '../../icons8-handwritten-ocr-96.png';
+import logo from '../../icons8-handwritten-ocr-96.webp';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';

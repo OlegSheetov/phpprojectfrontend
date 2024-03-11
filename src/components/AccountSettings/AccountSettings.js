@@ -30,7 +30,7 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
     // Удаляет из кукки все данные и перенаправляет пользователя на главный экран
     // с его обновлением.
     function Exit(props) {
-        if (confirm("Are you sure?") == true) {
+        if ( confirm("Are you sure?") == true ) {
             Cookie.remove("name");
             Cookie.remove("password");
             Cookie.remove("login");
@@ -55,7 +55,7 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
             payload.append("new_password", Password);
             payload.append("new_description", Description);
             payload.append("new_mbtitype", MBTITYPE);
-            fetch("http://localhost:80/.backend/index.php", {
+            fetch("http://localhost:80/backend/index.php", {
                 method: "POST",
                 body: payload,
             })
@@ -84,7 +84,7 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
             payload.append("name", Name);
             payload.append("login", Cookie.get("login"));
             payload.append("CheckPassword", Password);
-            fetch("http://localhost:80/.backend/index.php", {
+            fetch("http://localhost:80/backend/index.php", {
                 method: "POST",
                 body: payload,
             })

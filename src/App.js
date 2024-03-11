@@ -9,33 +9,18 @@ import LoginComponent from "./components/LoginComponent/LoginComponent.js";
 import AnquetteDetailed from "./components/AnquetteDetailed/AnquetteDetailed.js";
 import AccountSettings from "./components/AccountSettings/AccountSettings.js";
 import SearchByType from "./components/SearchByType/SearchByType.js";
+import WhatIsAnquette from './components/WhatIsAnquette/WhatIsAnquette.js';
+import AdminPanel from './components/AdminPanelComponents/AdminPanel/AdminPanel.jsx'
+import AdminPanelLoginScreen from './components/AdminPanelComponents/AdminPanelLoginScreen/AdminPanelLoginScreen.jsx'
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
-import WhatIsAnquette from './components/WhatIsAnquette/WhatIsAnquette.js';
-
+import Fetch from './helpers/fetch.js'
 
 export default function App () {
     let [users , setUsers] = useState([]);
 
     let usersRef = useRef();
     const [RerenderValue , ReRender] = useReducer(  x=> x+1, 0);
-
-    // Функция которая запрашивает с сервака всех пользователей. Не принимает параметров.
-    // Каждый раз список пользователей приходит в рандомном порядке. 
-    // После получения записывает полученный обьект с пользователями в стейт Users , 
-    // а так же в хранилище сессии , чтобы , когда пользователь перейдет на страницу карточики
-    // и по какой либо причине обновит страницу , программа не теряла данные и не выдавала 
-    // ошибку.
-    function fetchUsers() { 
-       fetch("http://localhost:80/.backend/index.php", {method: "GET"})
-            .then(response => response.text())
-            .then(result => JSON.parse(result))
-            .then(json => {
-                setUsers(json);
-                sessionStorage.Users = JSON.stringify(json)
-            })
-           .catch(error => console.log('error', error));
-    }
 
     // Записывает данные с пользователями при перезагрузке страницы 
     // в стейт Users из сессионного хранилища.  
@@ -46,7 +31,13 @@ export default function App () {
     }
 
     useEffect(()=>{
-        fetchUsers();
+        Fetch(
+            "GET",
+            undefined, 
+            (json)=>{
+            setUsers(json);
+            sessionStorage.Users = JSON.stringify(json)
+        })
         SaveUsersToSessionStorage();
     }, [RerenderValue])
 
@@ -65,12 +56,16 @@ export default function App () {
                 <Container>
                             <Routes>
                                 <Route 
-                                    path="/SearchByType"
-                                    element={<SearchByType users={users} />}
+                                   path="/SearchByType"
+                                   element={<SearchByType users={users} />}
                                 />
                                <Route 
                                    path="/"
-                                   element={<AnquetteCard users={users}/>}
+                               element={
+                                   <AnquetteCard 
+                                        users={users}
+                                   />
+                               }
                                />
                                 <Route 
                                     path="/Registration"
@@ -92,12 +87,20 @@ export default function App () {
                                     path="/WhatIsAnquette"
                                     element={<WhatIsAnquette/>}
                                 />
+                                <Route 
+                                    path="/AdminPanel"
+                                    element={<AdminPanel/>}
+                                />
+                                <Route 
+                                    path="/AdminPanelLoginScreen"
+                                    element={<AdminPanelLoginScreen/>}
+                                />
+                                
                             </Routes>
                     </Container>
                     <div className="footer">
                         <div>
-                            <a href="https://www.freepik.com/free-photo/beautiful-shot-top-mountain_11111354.htm
-                            #query=picks&position=0&from_view=search&track=sph&uuid=218e7aa6-c4a0-43bd-8f30-1d81ad3084bb">Image by wirestock</a> on Freepik
+                            <a href="https://www.freepik.com/free-photo/beautiful-shot-top-mountain_11111354.html#query=picks&position=0&from_view=search&track=sph&uuid=218e7aa6-c4a0-43bd-8f30-1d81ad3084bb">Image by wirestock</a> on Freepik
                         </div>
                         <div>
                             <a target="_blank" href="https://icons8.com/icon/15108/handwritten-ocr">Handwritten OCR</a> icon by 

@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Cookie from 'js-cookie';
 import {useNavigate} from 'react-router-dom';
+import Fetch from '../../helpers/fetch.js'
 
 
 export default function LoginComponent(props){ 
@@ -33,63 +34,51 @@ export default function LoginComponent(props){
 
     // Функция обрабатывающая форму логина.
     function loginHandler(e){ 
-        LoginFormValidation();
         if(LoginFormValidation()){
-            let payload = new FormData(); 
-            payload.append('__method' , 'Login' )
-            payload.append('name' , name.trim());
-            payload.append('login' , login.trim());
-            payload.append('password', password.trim());
-            fetch(
-                "http://localhost:80/.backend/index.php",
-                {method: "POST" , body:payload}
+            Fetch('POST',
+                { 
+                    __method:'Login',
+                    name: name.trim(), 
+                    login: login.trim(), 
+                    password: password.trim(),
+                },
+                (json)=>{
+                    if(json.user_exists == true){ 
+                        Cookie.set(
+                            'name',
+                            name ,
+                            { secure: true, sameSite:'strict' }
+                        )
+                        Cookie.set(
+                            'login',
+                            login ,
+                            { secure: true, sameSite:'strict' }
+                        )
+                        Cookie.set(
+                            'password',
+                            password,
+                            {secure: true, sameSite:'strict' }
+                        )
+                        Cookie.set(
+                            'description',
+                            json.UserData.description,
+                            { secure: true, sameSite:'strict' }
+                        )
+                        Cookie.set(
+                            'MBTITYPE',
+                            json.UserData.mbtitype,
+                            { secure: true, sameSite:'strict' }
+                        )
+                        Cookie.set(
+                            'ID',
+                            json.UserData.id,
+                            { secure: true, sameSite:'strict' }
+                        )
+                        NavigateAndReRender();
+                    }
+                }
             )
-              .then(response => response.text())
-                .then(result => JSON.parse(result) )
-              .then(json =>{
-                  // Если пользователь существует , то прилетает json с полем user_exists 
-                  // И если там true ，то записывает все данные в кукки.
-                       if(json.user_exists == true){
-                           Cookie.set(
-                              'name' ,
-                               name ,
-                               {secure: true , samesite: 'strict'}
-                           );
-                           Cookie.set(
-                              'login' ,
-                               login ,
-                               {secure: true , samesite: 'strict'}
-                           );
-                           Cookie.set(
-                              'password' ,
-                               password ,
-                               {secure: true , samesite: 'strict'}
-                           );
-                           Cookie.set(
-                               'description', 
-                               json.UserData.description,
-                               {secure: true , samesite: 'strict'}
-                           );
-                           Cookie.set(
-                                'MBTITYPE',
-                               json.UserData.mbtitype, 
-                               {secure: true , samesite: 'strict'}
-                           );
-                           Cookie.set(
-                                'ID',
-                               json.UserData.id, 
-                               {secure: true , samesite: 'strict'}
-                           );
-                           NavigateAndReRender();
-                       }else{ 
-                           alert('Пользователь не найден. Измени что-нибудь и попробуй снова. ')
-                       }
-                       
-                   } 
-               )
-              .catch(error => console.log('error', error));
         }
-
     }
 
 
@@ -124,11 +113,10 @@ export default function LoginComponent(props){
     }
     return(
         <Container className='LoginComponent'>
-                <Card className='LoginComponent_Form'>
-                    <Card.Body>
-                        <Card.Title>Login</Card.Title>
+                <div className='LoginComponent_Form'>
+                                            <h1>Login</h1>
                         <Form onSubmit={loginHandler}>
-                            <Form.Control className='mb-3' type='text' placeholder='Name' 
+                            <Form.Control className='mb-3 LoginComponent_FormControl' type='text' placeholder='Name' 
                                 ref={NameRef}
                                 isInvalid={NameValid}
                                 onChange={()=>{ 
@@ -137,24 +125,23 @@ export default function LoginComponent(props){
                                     LoginRef.current.value = `@${NameRef.current.value}Login`;
                                     setLogin(LoginRef.current.value);
                             }}/>
-                            <Form.Control className='mb-3' type='email' placeholder='Login' 
+                            <Form.Control className='mb-3 LoginComponent_FormControl' type='email' placeholder='Login' 
                                 ref={LoginRef}
                                 isInvalid={LoginValid}
                                 onChange={()=>{ 
                                     setLogin(LoginRef.current.value) 
                                     setLoginValid(!LoginRef.current.value)
                             }}/>
-                            <Form.Control   className='mb-3' type='password' placeholder='password' 
+                            <Form.Control   className='mb-3 LoginComponent_FormControl' type='password' placeholder='password' 
                                 ref={PasswordRef}
                                 isInvalid={PasswordValid}
                                 onChange={()=>{
                                     setPassword(PasswordRef.current.value) 
                                     setPasswordValid(!PasswordRef.current.value)
                             }}/>
-                            <Button type='button' onClick={loginHandler}>Login</Button>
+                            <Button variant='success' type='button' onClick={loginHandler}>Login</Button>
                         </Form>
-                    </Card.Body>
-                </Card>
+                </div>
         </Container>
     )
 }

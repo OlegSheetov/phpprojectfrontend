@@ -1,16 +1,17 @@
 .App{
     min-height: 100vh;
-    background-image: url('./beautiful-shot-top-mountain.jpg');
+    background-image: url('./beautiful-shot-top-mountain.webp');
     background-size:cover;
     background-repeat: no-repeat;
 }
 .footer{
-    padding: 50px;
-    
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:space-evenly;
 }
 .footer > div { 
-    width: 20%;
-    display :inline-block;
+    margin:10px;
 }
 .footer > a { 
     margin: 10px;
