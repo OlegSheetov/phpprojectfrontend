@@ -1,6 +1,4 @@
 
-
-    // TODO: Переписать валидацию формы как я это сделал на странице логина
     // админа и использовать хелпер FETCH
 
 import React, { useState, useRef } from "react";
@@ -23,7 +21,7 @@ export default function RegistrationComponent(props) {
     let [password, setPassword] = useState("");
     let [passwordAgain, setPasswordAgain] = useState("");
     let [description, setDescription] = useState("");
-    let [MBTITYPE, setMBTITYPE] = useState("");
+    let [MBTITYPE, setMBTITYPE] = useState("INTJ");
 
     // Стейты для валидации полей ввода.
     // Содержат булевое значение false.
@@ -71,14 +69,17 @@ export default function RegistrationComponent(props) {
                            // Если нет - то выводит сообщение что такой пользователь
                            // уже есть , придумай новое имя и логин.
                             if (json.response == "NEW") {
-                                Cookie.set("ID", json, {
-                                    secure: true,
-                                    sameSite: "strict",
-                                });
-                                NavigateAndReRender();
+                                Cookie.set(
+                                    "ID", 
+                                    String(json.ID),
+                                    {
+                                        secure: true,
+                                        sameSite: "strict"
+                                    }
+                                );
+                                NavigateAndReRender()
                             }
                             if (json.response == "DUPLICATE") {
-                                console.log(json);
                                 alert(
                                  "Такой никнейм и логин заняты . Пожалуйста измените их."
                                 );
@@ -107,8 +108,6 @@ export default function RegistrationComponent(props) {
             setPasswordAgainValid(true);
             setDescriptionValid(true);
             setMBTIValid(true);
-            alert('false')
-            console.log(!nameRef.current.value)
             return false;
         } else {
             setNameValid(false);
@@ -117,7 +116,6 @@ export default function RegistrationComponent(props) {
             setPasswordAgainValid(false);
             setDescriptionValid(false);
             setMBTIValid(false);
-            alert('true')
             return true;
         }
     }

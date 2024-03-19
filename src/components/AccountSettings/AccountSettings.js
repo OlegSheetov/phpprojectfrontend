@@ -7,7 +7,9 @@ import { Stack } from "react-bootstrap";
 import { ButtonGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import CommentsComponent from '../../components/CommentsComponent/CommentsComponent.js'
-export default function AccountSettings(props) { let [Name, setName] = useState("");
+import Fetch from '../../helpers/fetch.js'
+export default function AccountSettings(props) {
+    let [Name, setName] = useState("");
     let [Password, setPassword] = useState("");
     let [Description, setDescription] = useState("");
     let [MBTITYPE, setMBTITYPE] = useState("");
@@ -46,61 +48,79 @@ export default function AccountSettings(props) { let [Name, setName] = useState(
     // кукки
     function Change() {
         if (confirm("Are you sure?") == true) {
-            let payload = new FormData();
-            payload.append("__method", "UpdateUser");
-            payload.append("name", Cookie.get("name"));
-            payload.append("login", Cookie.get("login"));
-            payload.append("password", Cookie.get("password"));
-            payload.append("new_name", Name);
-            payload.append("new_password", Password);
-            payload.append("new_description", Description);
-            payload.append("new_mbtitype", MBTITYPE);
-            fetch("http://localhost:80/backend/index.php", {
-                method: "POST",
-                body: payload,
-            })
-                .then((response) => {
-                    response.text();
-                })
-                .then((json) => {
-                    console.log(json);
+
+            Fetch(
+                "POST",
+                {
+                    __method: 'UpdateUser', 
+                    login: Cookie.get('login'),
+                    name: Cookie.get('name'),
+                    CheckPassword: Cookie.get('password'),
+                    new_name: Name, 
+                    new_password: Password, 
+                    new_description: Description, 
+                    new_MBTITYPE: MBTITYPE
+                },
+            )
                     Cookie.set("name", Name);
                     Cookie.set("password", Password);
                     Cookie.set("description", Description);
                     Cookie.set("MBTITYPE", MBTITYPE);
                     alert("Данные обновлены");
-                })
-                .catch((error) => console.log("error", error));
+                
         }
     }
 
     // Удаляет аккаунт и все его данные в кукки.
+    // Оставлю это так потому что работает XD 
     function DeleteAccount() {
         console.log("Click Delete");
         if (confirm("Are you sure?") == true) {
-            console.log("Account deleted!");
-            let payload = new FormData();
-            payload.append("__method", "DeleteUser");
-            payload.append("name", Name);
-            payload.append("login", Cookie.get("login"));
-            payload.append("CheckPassword", Password);
-            fetch("http://localhost:80/backend/index.php", {
-                method: "POST",
-                body: payload,
-            })
-                .then((response) => {
-                    response.text();
+                console.log("Account deleted!");
+                let payload = new FormData();
+                payload.append("__method", "DeleteUser");
+                payload.append("name", Name);
+                payload.append("login", Cookie.get("login"));
+                payload.append("CheckPassword", Password);
+                fetch("http://localhost:80/backend/index.php", {
+                    method: "POST",
+                    body: payload,
                 })
-                .then((result) => {
-                    console.log(result);
-                    Cookie.remove("name");
-                    Cookie.remove("login");
-                    Cookie.remove("password");
-                    Cookie.remove("description");
-                    Cookie.remove("MBTITYPE");
-                    NavigateAndReRender();
-                })
-                .catch((error) => console.log("error", error));
+                    .then((response) => {
+                        response.text();
+                    })
+                    .then((result) => {
+                        Cookie.remove("name");
+                        Cookie.remove("login");
+                        Cookie.remove("password");
+                        Cookie.remove("description");
+                        Cookie.remove("MBTITYPE");
+                        Cookie.remove("ID");
+                        NavigateAndReRender();
+                    })
+                    .catch((error) => console.log("error", error));
+
+            //    Fetch( "POST",
+            //        {
+            //            __method: "DeleteUser",
+            //            name : Name,
+            //            login: Cookie.get('login'),
+            //            CheckPassword: Password,
+            //        },
+            //        (json)=>{ 
+            //            Cookie.remove("name");
+            //            Cookie.remove("login");
+            //            Cookie.remove("password");
+            //            Cookie.remove("description");
+            //            Cookie.remove("MBTITYPE");
+            //            NavigateAndReRender();
+            //        }
+            //    )
+
+
+
+
+
         }
     }
 

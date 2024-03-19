@@ -41,6 +41,17 @@ export default function App () {
         SaveUsersToSessionStorage();
     }, [RerenderValue])
 
+    function PutNewPourtion(){ 
+        Fetch(
+            "GET",
+            undefined, 
+            (json)=>{
+            setUsers([...users , ...json])
+            let oldUsers = JSON.parse(sessionStorage.Users)
+            sessionStorage.Users = JSON.stringify([...oldUsers , ...json]);
+        })
+    }
+
     // Ищет определенную запись в стейте по id. 
        function getUser(id){ 
            return users.find((el) => el.id == id)
@@ -64,6 +75,7 @@ export default function App () {
                                element={
                                    <AnquetteCard 
                                         users={users}
+                                        PutNewPourtion={PutNewPourtion}
                                    />
                                }
                                />

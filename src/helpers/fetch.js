@@ -37,10 +37,7 @@ export default function Fetch(Method, formData, toDoOnResponse) {
                 toDoOnResponse(json)
             })
            .catch(error => console.log('error', error));
-
-
     }
-
     else { 
         console.log("Method isn't string");
     }
