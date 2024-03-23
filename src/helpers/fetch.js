@@ -11,7 +11,7 @@ export default function Fetch(Method, formData, toDoOnResponse) {
        fetch("http://localhost:80/backend/index.php", { method: Method})
             .then(response => response.text())
             .then(result => JSON.parse(result))
-            .then(json => {
+            .then((json) => {
                 toDoOnResponse(json)
             })
            .catch(error => console.log('error', error));

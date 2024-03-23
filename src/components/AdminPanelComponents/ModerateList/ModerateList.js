@@ -6,30 +6,20 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import CommentsComponent from '../../CommentsComponent/CommentsComponent.js';
 import Fetch from '../../../helpers/fetch.js'
 import Cookie from 'js-cookie'
+import ScrollHandler from "../../../helpers/scrollHandler.js"
 
 
 
 export default function ModerateList(props){ 
 
-    // Удаляет аккаунт и все его данные в кукки.
-    function AdminDeleteAnqueete(id , name) { 
-        const AdminData = JSON.parse(Cookie.get('Admin'));
-        Fetch(
-            "POST", 
-            {
-                __method: 'AdminDeleteAnqueete',
-                AdminLogin: AdminData.login, 
-                AdminPassword: AdminData.password, 
-                UserID: id, 
-                UserName: name,
-            },
-            ()=>{
-                Update();
-            })
-    }
+
 
     return(
-        <div className='ModerateList'>
+        <div className='ModerateList'
+            onScroll={(e)=>{
+                ScrollHandler(e , props.PutNewPourtion)
+            }}
+        >
             {props.list.map((item)=>(
                 <Card key={item.id} className='mb-3'>
                     <Card.Body>
@@ -42,7 +32,11 @@ export default function ModerateList(props){
                         <CommentsComponent AnquetteID={item.id} hideSwitch={'show'}/>
                         <Button
                             variant='danger' 
-                            ClassName='m-1'
+                            className='m-1'
+                            value={item.id , item.name}
+                        onClick={()=>{
+                            props.AdminDeleteAnqueete(item.id , item.name);
+                        }}
                         > Delete</Button>
                     </Card.Body>
                 </Card>

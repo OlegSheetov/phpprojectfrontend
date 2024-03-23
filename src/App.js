@@ -1,5 +1,4 @@
-import React , {useState , useEffect, useRef, useReducer } from "react";
-import logo from "./logo.svg";
+import React , {useState , useEffect,  useReducer } from "react";
 import "./App.css";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import TopMenu from "./components/TopMenu/TopMenu.js";
@@ -14,13 +13,21 @@ import AdminPanel from './components/AdminPanelComponents/AdminPanel/AdminPanel.
 import AdminPanelLoginScreen from './components/AdminPanelComponents/AdminPanelLoginScreen/AdminPanelLoginScreen.jsx'
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
-import Fetch from './helpers/fetch.js'
-
+import Fetch from './helpers/fetch.js';
 export default function App () {
     let [users , setUsers] = useState([]);
-
-    let usersRef = useRef();
     const [RerenderValue , ReRender] = useReducer(  x=> x+1, 0);
+
+    // Я просто скопировал это из инте по этому не знаю как это работае. НО работает. 
+    Array.prototype.includesObj = function(obj) {
+       for(let i = 0; i < this.length; i++) {
+           if(JSON.stringify(this[i],
+               Object.keys(this[i]).sort()) === JSON.stringify(obj, Object.keys(obj).sort()))
+               return true;
+       }
+       return false;
+    }
+
 
     // Записывает данные с пользователями при перезагрузке страницы 
     // в стейт Users из сессионного хранилища.  
@@ -41,21 +48,20 @@ export default function App () {
         SaveUsersToSessionStorage();
     }, [RerenderValue])
 
-    function PutNewPourtion(){ 
-        Fetch(
-            "GET",
-            undefined, 
-            (json)=>{
-            setUsers([...users , ...json])
-            let oldUsers = JSON.parse(sessionStorage.Users)
-            sessionStorage.Users = JSON.stringify([...oldUsers , ...json]);
-        })
-    }
-
-    // Ищет определенную запись в стейте по id. 
-       function getUser(id){ 
-           return users.find((el) => el.id == id)
-       }
+    // Оно работает. По этому не трогаю.
+        function PutNewPourtion(){ 
+            function onlyNew(el){return !users.includesObj(el)
+                }
+            Fetch(
+                "GET",
+                undefined, 
+                (json)=>{
+                    let newAnquettes = json.filter(onlyNew)
+                    setUsers([...users , ...newAnquettes])
+                    const oldUsers = JSON.parse(sessionStorage.Users)
+                    sessionStorage.Users = JSON.stringify([...oldUsers , ...newAnquettes]);
+            })
+        }
 
 
         return (
