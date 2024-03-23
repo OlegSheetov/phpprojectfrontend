@@ -2,8 +2,7 @@ import React , {useEffect, useState, useReducer } from 'react';
 import './AdminPanel.css';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import {Link , useNavigate} from 'react-router-dom';
-import Nav from 'react-bootstrap/Nav';
+import { useNavigate} from 'react-router-dom';
 import Stack from 'react-bootstrap/Stack';
 import Container from 'react-bootstrap/Container';
 import ModerateList from '../ModerateList/ModerateList.js';
@@ -15,8 +14,22 @@ export default function AdminPanel(){
     const HandleShow = () => setShow(true);
     const [ list , setList ] = useState([]);
     const navigate = useNavigate();
-    let ListSwitch = useState('');
     const [UpdateValue, Update] = useReducer(x=> x+1, 0);
+
+
+
+    // Оно работает. По этому не трогаю.
+    function PutNewPourtion(){ 
+        Fetch(
+            "GET",
+            undefined, 
+            (json)=> {
+                function onlyNew(el){return !list.includesObj(el)}
+                setList([...list , ...json.filter(onlyNew)]);
+            }
+        )
+    }
+
 
     function CheckWhatYouIsAdmin(){
         // ТУТ ДОЛЖЕН БЫТЬ ЗАПРОС НА СЕРВЕР С ЛОГИНОМ И ПАРОЛЕМ АДМИНА. 
@@ -41,6 +54,23 @@ export default function AdminPanel(){
         }
     }
 
+    // Удаляет аккаунт и все его данные в кукки.
+    function AdminDeleteAnqueete(id , name) { 
+        const AdminData=JSON.parse(Cookie.get('Admin'));
+        console.log(AdminData)
+        Fetch(
+            "POST", 
+            {
+                __method: 'AdminDeleteAnqueete',
+                AdminLogin: AdminData.AdminLogin, 
+                AdminPassword: AdminData.AdminPassword, 
+                UserID: id, 
+                UserName: name,
+            },
+            (json)=>{
+                Update();
+            })
+    }
 
     useEffect(()=>{
         CheckWhatYouIsAdmin();
@@ -69,8 +99,13 @@ export default function AdminPanel(){
                      </Stack>
                 </Offcanvas>
                 <Container>
-                    <ModerateList list={list} Update={Update}/>
-                </Container>
+                    <ModerateList 
+                        list={list}
+                        Update={Update}
+                        PutNewPourtion={PutNewPourtion}
+                        AdminDeleteAnqueete={AdminDeleteAnqueete}
+                    />
+                    </Container>
         </div>
     )
 }
