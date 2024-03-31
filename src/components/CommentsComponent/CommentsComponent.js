@@ -2,7 +2,8 @@ import React, {useEffect, useState, useRef, useReducer } from "react";
 import './CommentsComponent.css';
 import { Form, Button , InputGroup , Card} from "react-bootstrap";
 import Cookie from 'js-cookie';
-import Fetch from '../../helpers/fetch.js'
+import Fetch from '../../helpers/fetch.js';
+import { pencil , trash  , mail} from '../../helpers/svg.js';
 
 export default function CommentsComponent(props) {
     // Ужастный код. Надеюсь что его никто не увидит.
@@ -146,7 +147,7 @@ export default function CommentsComponent(props) {
                     variant='danger'
                     value={CommentID}
                     onClick={()=>{DeleteComment(CommentID)}}
-                >Удалить</Button>
+                >{trash}</Button>
             )
         }
     }
@@ -173,7 +174,7 @@ export default function CommentsComponent(props) {
                         );
                     }
                 }
-                >Изменить</Button>
+                >{pencil}</Button>
             )
         }
     }
@@ -210,7 +211,7 @@ export default function CommentsComponent(props) {
                                 onClick={sendNewComment}
                                 ref={SendRef}
                             >
-                                Отправить
+                                {mail}
                             </Button>
                             <Button
                                 variant="warning"
@@ -218,7 +219,7 @@ export default function CommentsComponent(props) {
                                 ref={ChangeAndSendRef}
                                 className='d-none'
                             >
-                                Изменить и отправить
+                                {pencil} & {mail}
                             </Button>
                         </InputGroup>
                     </Form>

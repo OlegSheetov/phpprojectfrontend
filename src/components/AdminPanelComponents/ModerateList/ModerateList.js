@@ -1,17 +1,20 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import './ModerateList.css'
 import Card from 'react-bootstrap/Card'
-import Button from 'react-bootstrap/Button'
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import CommentsComponent from '../../CommentsComponent/CommentsComponent.js';
-import Fetch from '../../../helpers/fetch.js'
-import Cookie from 'js-cookie'
 import ScrollHandler from "../../../helpers/scrollHandler.js"
-
-
-
+import InputGroup from 'react-bootstrap/InputGroup'
+import Button from 'react-bootstrap/Button'
+import { pencil , trash  } from '../../../helpers/svg.js'
 export default function ModerateList(props){ 
+    const NameRef = useRef()
+    const DescriptionRef = useRef()
 
+    function  AdminChangeAnquette(){
+        console.log('working');
+
+
+    }
 
 
     return(
@@ -21,25 +24,35 @@ export default function ModerateList(props){
             }}
         >
             {props.list.map((item)=>(
-                <Card key={item.id} className='mb-3'>
-                    <Card.Body>
-                        <Card.Title
-                            className='AnquetteCard_UserName'
-                        >
-                                {item.name}{' '}{item.mbtitype}
-                        </Card.Title>
-                        <Card.Text>{item.description}</Card.Text>
-                        <CommentsComponent AnquetteID={item.id} hideSwitch={'show'}/>
-                        <Button
-                            variant='danger' 
-                            className='m-1'
-                            value={item.id , item.name}
-                        onClick={()=>{
-                            props.AdminDeleteAnqueete(item.id , item.name);
-                        }}
-                        > Delete</Button>
-                    </Card.Body>
-                </Card>
+                    <Card  key={item.id} className='mb-3'>
+                        <Card.Body>
+                            <Card.Title
+                                className='AnquetteCard_UserName'
+                                ref={NameRef}
+                            >
+                                    {item.name}{' '}{item.mbtitype}
+                            </Card.Title>
+                            <Card.Text
+                                ref={DescriptionRef}
+                            >{item.description}</Card.Text>
+                            <InputGroup>
+                                <Button
+                                    variant='success' 
+                                    title='Change'
+                                    onClick={AdminChangeAnquette}
+                                >{pencil}</Button>
+                                <Button 
+                                    variant='danger'
+                                    title='Delete'
+                                >{trash}</Button>
+                            </InputGroup>
+
+                            <CommentsComponent 
+                                AnquetteID={item.id}   
+                                hideSwitch={'show'}
+                            />
+                        </Card.Body>
+                    </Card>
             ))}
         </div>
     )

@@ -1,6 +1,7 @@
 import React , {useEffect, useState, useReducer } from 'react';
 import './AdminPanel.css';
 import Button from 'react-bootstrap/Button';
+import CloseButton from 'react-bootstrap/CloseButton';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { useNavigate} from 'react-router-dom';
 import Stack from 'react-bootstrap/Stack';
@@ -17,7 +18,6 @@ export default function AdminPanel(){
     const [UpdateValue, Update] = useReducer(x=> x+1, 0);
 
 
-
     // Оно работает. По этому не трогаю.
     function PutNewPourtion(){ 
         Fetch(
@@ -32,8 +32,6 @@ export default function AdminPanel(){
 
 
     function CheckWhatYouIsAdmin(){
-        // ТУТ ДОЛЖЕН БЫТЬ ЗАПРОС НА СЕРВЕР С ЛОГИНОМ И ПАРОЛЕМ АДМИНА. 
-        // ЕСЛИ ЧТО-ТО НЕ ТАК ОТПРАВЛЯТЬ НА ЛОГИН СКРИН.
         if(!Cookie.get('Admin')){
             navigate('/AdminPanelLoginScreen');
         }else { 
@@ -44,7 +42,6 @@ export default function AdminPanel(){
                     AdminLogin: Admindata.AdminLogin,
                     AdminPassword: Admindata.AdminPassword,
                 }, 
-
                 (json)=>{ 
                     if(json.response === false){ 
                         navigate('/AdminPanelLoginScreen');
@@ -54,22 +51,32 @@ export default function AdminPanel(){
         }
     }
 
+    function ExitForAdmin() { 
+        if(confirm('Вы уверены?')){
+            Cookie.remove('Admin');
+            navigate('/')
+        }
+    }
+
     // Удаляет аккаунт и все его данные в кукки.
     function AdminDeleteAnqueete(id , name) { 
-        const AdminData=JSON.parse(Cookie.get('Admin'));
-        console.log(AdminData)
-        Fetch(
-            "POST", 
-            {
-                __method: 'AdminDeleteAnqueete',
-                AdminLogin: AdminData.AdminLogin, 
-                AdminPassword: AdminData.AdminPassword, 
-                UserID: id, 
-                UserName: name,
-            },
-            (json)=>{
-                Update();
-            })
+        if(confirm('Вы уверены!')){ 
+            const AdminData=JSON.parse(Cookie.get('Admin'));
+            Fetch(
+                "POST", 
+                {
+                    __method: 'AdminDeleteAnquette',
+                    AdminLogin: AdminData.AdminLogin, 
+                    AdminPassword: AdminData.AdminPassword, 
+                    UserID: id, 
+                    UserName: name,
+                },
+                (json)=>{
+                    console.log(json)
+                    alert('Пользователь удален');
+                })
+                    Update();
+        } 
     }
 
     useEffect(()=>{
@@ -83,19 +90,21 @@ export default function AdminPanel(){
 
     return(
         <div className='AdminPanel'>
-            <Button
+            <CloseButton
                 onClick={HandleShow}
                 variant='light'
                 className='MenuButton fixed-top'
-            >Menu</Button>
+            />
             <Offcanvas show={show} onHide={HandleClose}>
              <Offcanvas.Header closeButton>
               <Offcanvas.Title>Menu</Offcanvas.Title>
                  </Offcanvas.Header>
                      <Stack gap={3} className='d-flex justify-content-center align-items-center'>
-                         <Button className='w-75' >Анекты</Button>
-                             <Button className='w-75'>Комменты </Button>
-                             <Button className='w-75'variant="danger">Выход</Button>
+                         <Button 
+                             className='w-75'
+                             variant="danger"
+                             onClick={ExitForAdmin}
+                         >Выход</Button>
                      </Stack>
                 </Offcanvas>
                 <Container>

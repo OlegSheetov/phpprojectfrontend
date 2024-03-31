@@ -6,7 +6,7 @@ import Container from "react-bootstrap/Container";
 import CommentsComponent from '../../components/CommentsComponent/CommentsComponent';
 import Cookie from 'js-cookie';
 import Button from 'react-bootstrap/Button';
-
+import InputGroup from 'react-bootstrap/InputGroup'
 export default function AnquetteDetailed(props) {
     const { key } = useParams();
     let [user , setUser] = useState({})
@@ -25,7 +25,6 @@ export default function AnquetteDetailed(props) {
         }
 
     }
-
 
     useEffect(()=>{
         setUser(getUser(key));
