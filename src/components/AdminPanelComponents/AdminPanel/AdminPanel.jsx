@@ -9,6 +9,10 @@ import Container from 'react-bootstrap/Container';
 import ModerateList from '../ModerateList/ModerateList.js';
 import Fetch from '../../../helpers/fetch.js';
 import Cookie from 'js-cookie';
+
+
+
+
 export default function AdminPanel(){ 
     const [show, setShow]= useState(false);
     const HandleClose = () => setShow(false);
@@ -18,7 +22,7 @@ export default function AdminPanel(){
     const [UpdateValue, Update] = useReducer(x=> x+1, 0);
 
 
-    // Оно работает. По этому не трогаю.
+// Оно работает. По этому не трогаю.
     function PutNewPourtion(){ 
         Fetch(
             "GET",
@@ -34,10 +38,10 @@ export default function AdminPanel(){
     function CheckWhatYouIsAdmin(){
         if(!Cookie.get('Admin')){
             navigate('/AdminPanelLoginScreen');
-        }else { 
+        }else {     
             const Admindata=JSON.parse(Cookie.get('Admin'));
             Fetch("POST",
-                {  
+            {  
                     __method:'CheckWhatYouIsAdmin',
                     AdminLogin: Admindata.AdminLogin,
                     AdminPassword: Admindata.AdminPassword,
@@ -92,7 +96,6 @@ export default function AdminPanel(){
         <div className='AdminPanel'>
             <CloseButton
                 onClick={HandleShow}
-                variant='light'
                 className='MenuButton fixed-top'
             />
             <Offcanvas show={show} onHide={HandleClose}>
