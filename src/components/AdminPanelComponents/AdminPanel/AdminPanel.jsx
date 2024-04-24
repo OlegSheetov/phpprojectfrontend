@@ -11,8 +11,6 @@ import Fetch from '../../../helpers/fetch.js';
 import Cookie from 'js-cookie';
 
 
-
-
 export default function AdminPanel(){ 
     const [show, setShow]= useState(false);
     const HandleClose = () => setShow(false);
@@ -45,7 +43,7 @@ export default function AdminPanel(){
                     __method:'CheckWhatYouIsAdmin',
                     AdminLogin: Admindata.AdminLogin,
                     AdminPassword: Admindata.AdminPassword,
-                }, 
+	    }, 
                 (json)=>{ 
                     if(json.response === false){ 
                         navigate('/AdminPanelLoginScreen');
